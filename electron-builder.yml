@@ -1,0 +1,12 @@
+appId: com.example.nextron
+productName: sales-management
+copyright: Copyright © 2021 Eduardo Leite
+directories:
+    output: dist
+    buildResources: resources
+files:
+    - from: .
+      filter:
+          - package.json
+          - app
+publish: null
