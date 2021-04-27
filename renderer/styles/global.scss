@@ -16,16 +16,22 @@
 
   --green-500: #18d66f;
 
-  --blue-300: #1ea9f3;
-  --blue-400: #2a9bd7;
+  --blue-200: #1ea9f3;
+  --blue-300: #2a9bd7;
+  --blue-400: #1296dc;
   --blue-500: #23688d;
   --blue-800: #0b4b6d;
 
   --orange-500: #ed9c18;
 }
 
+html {
+  width: 100%;
+  height: 100%;
+}
+
 body {
-  background: var(--gray-50);
+  background: linear-gradient(180deg, #e5f3fc 0%, #e8f7ff 100%);
 }
 
 body,
