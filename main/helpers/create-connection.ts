@@ -11,6 +11,9 @@ export default () => {
       directory: path.join(__dirname, "../db/migrations"),
       tableName: 'knex_migrations',
     },
+    pool: {
+      afterCreate: (conn, cb) => conn.run('PRAGMA foreign_keys = ON', cb)
+    },
     useNullAsDefault: true,
    })
 }

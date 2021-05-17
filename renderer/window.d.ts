@@ -11,5 +11,10 @@ declare interface Window {
     getProdutos: () => Promise<import('../db/model/Produto').Produto[]>
     insertProduto: (produto: import('../db/model/Produto').Produto) => Promise<number[]>
     insertProdutos: (produtos: import('../db/model/Produto').Produto[]) => Promise<number[]>
+
+    // product price session
+    getPrecoProduto: (clienteId: number, produtoId: number) => Promise<any>
+    getPrecoProdutos: () => Promise<any>
+    insertPrecoProduto: (precoProduto: import('../db/model/PrecoProduto').PrecoProduto) => Promise<number[]>
   }
 }

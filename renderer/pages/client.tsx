@@ -5,6 +5,12 @@ import { Button } from "../components/Button";
 import { TextInput } from "../components/TextInput";
 
 function Client() {
+
+  async function teste() {
+    const teste = await window.api.getPrecoProduto(1, 1)
+
+    console.log(teste)
+  }
   return (
     <React.Fragment>
       <Head>
@@ -12,6 +18,8 @@ function Client() {
       </Head>
       <div>
         <h1>Clientes</h1>
+        <br />
+        <Button onClick={() => {teste()}} >Teste</Button>
       </div>
     </React.Fragment>
   );

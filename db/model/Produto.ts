@@ -8,7 +8,7 @@ export type Produto = {
 
 export enum ProductChannels {
   GET_PRODUTO = 'get-produto',
-  GET_PRODUTOS = 'get-products',
+  GET_PRODUTOS = 'get-produtos',
   INSERT_PRODUTO = 'insert-produto',
   INSERT_PRODUTOS = 'insert-produtos'
 }
