@@ -1,10 +1,10 @@
 declare interface Window {
   api: {
     // client session
-    getCliente: (id: number) => Promise<import('../db/model/Cliente').Cliente>
-    getClientes: () => Promise<import('../db/model/Cliente').Cliente[]>
-    insertCliente: (cliente: import('../db/model/Cliente').Cliente) => Promise<number[]>
-    insertClientes: (clientes: import('../db/model/Cliente').Cliente[]) => Promise<number[]>
+    getCliente: (id: number) => Promise<import('../db/model/Cliente').Client>
+    getClientes: () => Promise<import('../db/model/Cliente').Client[]>
+    insertCliente: (cliente: import('../db/model/Cliente').Client) => Promise<number[]>
+    insertClientes: (clientes: import('../db/model/Cliente').Client[]) => Promise<number[]>
 
     // product session
     getProduto: (id: number) => Promise<import('../db/model/Produto').Produto>

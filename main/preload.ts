@@ -1,15 +1,17 @@
 import { ipcRenderer, contextBridge } from "electron";
-import { Cliente, CustomerChannels } from "../db/model/Cliente";
+import { Client, CustomerChannels } from "../db/model/Cliente";
 import { PrecoProduto, ProductPriceChannels } from "../db/model/PrecoProduto";
 import { Produto, ProductChannels } from "../db/model/Produto";
 
 
 contextBridge.exposeInMainWorld("api", {
   // client session
-  getCliente: (id: number) => ipcRenderer.invoke(CustomerChannels.GET_CLIENTE, id),
-  getClientes: () => ipcRenderer.invoke(CustomerChannels.GET_CLIENTES),
-  insertCliente: (cliente: Cliente) => ipcRenderer.invoke(CustomerChannels.INSERT_CLIENTE, cliente),
-  insertClientes: (clientes: Cliente[]) => ipcRenderer.invoke(CustomerChannels.INSERT_CLIENTES, clientes),
+  clientQueries: {
+    getClient: (id: string) => ipcRenderer.invoke(CustomerChannels.GET_CLIENT, id),
+    getClients: () => ipcRenderer.invoke(CustomerChannels.GET_CLIENTS),
+    insertClient: (client: Client) => ipcRenderer.invoke(CustomerChannels.INSERT_CLIENT, client),
+    updateClient: (client: Client) => ipcRenderer.invoke(CustomerChannels.UPDATE_CLIENT, client),
+  },
 
   // product session
   getProduto: (id: number) => ipcRenderer.invoke(ProductChannels.GET_PRODUTO, id),

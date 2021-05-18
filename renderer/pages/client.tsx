@@ -7,9 +7,22 @@ import { TextInput } from "../components/TextInput";
 function Client() {
 
   async function teste() {
-    const teste = await window.api.getPrecoProduto(1, 1)
-
-    console.log(teste)
+    window.api.clientQueries.updateClient({
+      id: 'uuid()1',
+      name: 'xxxxxx',
+      cpfCnpj: 'xxxxxx',
+      phone: 'xxxxxx',
+      email: 'xxxxxx',
+      street: 'xxxxxx',
+      streetNumber: 'xxxxxx',
+      neighborhood: 'xxxxxx',
+      cep: 'xxxxxx',
+      city: 'xxxxxx',
+      state: 'xxxxxx',
+    }).then((rest) => {
+      console.log('id', rest);
+      window.api.clientQueries.getClients().then(console.log)
+    })
   }
   return (
     <React.Fragment>
@@ -19,7 +32,7 @@ function Client() {
       <div>
         <h1>Clientes</h1>
         <br />
-        <Button onClick={() => {teste()}} >Teste</Button>
+        <Button onClick={teste} >Teste</Button>
       </div>
     </React.Fragment>
   );
