@@ -1,3 +1,4 @@
-import CircleCheck from "./CircleCheck";
+import CircleCheck from './CircleCheck'
+import CircleError from './CircleError'
 
-export { CircleCheck };
+export { CircleCheck, CircleError }
