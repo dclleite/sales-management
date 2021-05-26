@@ -1,0 +1,43 @@
+.textInputContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.inputContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  // padding: 5px;
+
+  background: var(--white);
+
+  border: 1px solid #d6d6d6;
+  box-sizing: border-box;
+  border-radius: 8px;
+
+  transition: border 0.4s;
+}
+
+.input {
+  flex: 1 0;
+  min-width: 50px;
+  min-height: 25px;
+  font-size: inherit;
+  background-color: transparent;
+  padding-left: 5px;
+  border: 0;
+  &:focus {
+    outline: none;
+  }
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0;
+  background: transparent;
+  border: 0;
+  padding: 12px 12px 12px 8px;
+}

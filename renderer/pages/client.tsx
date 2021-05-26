@@ -3,6 +3,7 @@ import Head from 'next/head'
 import Link from 'next/link'
 import { Button } from '../components/Button'
 import { TextInput } from '../components/TextInput'
+import { SearchInput } from '../components/SearchInput'
 
 function Client() {
   const [state, setState] = useState({ nome: '' })
@@ -25,7 +26,15 @@ function Client() {
             value={state.nome}
             onChange={(value) => setState({ ...state, nome: value })}
             // validation={() => false}
-            disabled
+          />
+        </div>
+        <br />
+        <div style={{ width: 300 }}>
+          <SearchInput
+            value={state.nome}
+            onChange={(value) => setState({ ...state, nome: value })}
+            placeholder='Pesquisar produto ou cliente'
+            // validation={() => false}
           />
         </div>
       </div>
