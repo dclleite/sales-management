@@ -5,8 +5,8 @@ import styles from './styles.module.scss'
 import { BackIcon, NextIcon } from '../Icons'
 
 interface PageControlProps {
-  currentPage: number
-  totalPages: number
+  currentPage?: number
+  totalPages?: number
   back: () => void
   next: () => void
 }

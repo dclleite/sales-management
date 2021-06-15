@@ -9,6 +9,10 @@ import SupplierIcon from './SupplierIcon'
 import ProductsIcon from './ProductsIcon'
 import SalesIcon from './SalesIcon'
 import BackupIcon from './BackupIcon'
+import EyeIcon from './EyeIcon'
+import TrashIcon from './TrashIcon'
+import PencilIcon from './PencilIcon'
+import CloseIcon from './CloseIcon'
 
 export {
   CircleCheck,
@@ -22,4 +26,8 @@ export {
   ProductsIcon,
   SalesIcon,
   BackupIcon,
+  EyeIcon,
+  TrashIcon,
+  PencilIcon,
+  CloseIcon,
 }
