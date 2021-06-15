@@ -1,6 +1,6 @@
 import React from 'react'
 
-function Back(props: React.SVGProps<SVGSVGElement>) {
+function BackIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg width={8} height={15} viewBox='0 0 8 15' fill='none' xmlns='http://www.w3.org/2000/svg' {...props}>
       <path
@@ -11,4 +11,4 @@ function Back(props: React.SVGProps<SVGSVGElement>) {
   )
 }
 
-export default Back
+export default BackIcon

@@ -2,7 +2,7 @@ import React from 'react'
 
 import styles from './styles.module.scss'
 
-import { Back, Next } from '../Icons'
+import { BackIcon, NextIcon } from '../Icons'
 
 interface PageControlProps {
   currentPage: number
@@ -18,10 +18,10 @@ export function PageControl({ currentPage = 1, totalPages = 1, back, next }: Pag
         {currentPage}/{totalPages}
       </p>
       <button onClick={back}>
-        <Back />
+        <BackIcon />
       </button>
       <button onClick={next}>
-        <Next />
+        <NextIcon />
       </button>
     </div>
   )
