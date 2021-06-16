@@ -1,26 +1,37 @@
 import { ipcRenderer, contextBridge } from "electron";
-import { Client, CustomerChannels } from "../db/model/Cliente";
-import { PrecoProduto, ProductPriceChannels } from "../db/model/PrecoProduto";
-import { Produto, ProductChannels } from "../db/model/Produto";
+import { Client, ClientChannels } from "../db/model/Client";
+import { ProductPrice, ProductPriceChannels } from "../db/model/ProductPrice";
+import { Product, ProductChannels } from "../db/model/Product";
+import { OrderChannels } from "../db/model/Order";
 
 
 contextBridge.exposeInMainWorld("api", {
-  // client session
   clientQueries: {
-    getClient: (id: string) => ipcRenderer.invoke(CustomerChannels.GET_CLIENT, id),
-    getClients: () => ipcRenderer.invoke(CustomerChannels.GET_CLIENTS),
-    insertClient: (client: Client) => ipcRenderer.invoke(CustomerChannels.INSERT_CLIENT, client),
-    updateClient: (client: Client) => ipcRenderer.invoke(CustomerChannels.UPDATE_CLIENT, client),
+    getById: (id: string) => ipcRenderer.invoke(ClientChannels.GET_BY_ID, id),
+    getAll: () => ipcRenderer.invoke(ClientChannels.GET_ALL),
+    insert: (client: Client) => ipcRenderer.invoke(ClientChannels.INSERT_CLIENT, client),
+    update: (client: Client) => ipcRenderer.invoke(ClientChannels.UPDATE_CLIENT, client),
   },
 
-  // product session
-  getProduto: (id: number) => ipcRenderer.invoke(ProductChannels.GET_PRODUTO, id),
-  getProdutos: () => ipcRenderer.invoke(ProductChannels.GET_PRODUTOS),
-  insertProduto: (produto: Produto) => ipcRenderer.invoke(ProductChannels.INSERT_PRODUTO, produto),
-  insertProdutos: (produtos: Produto[]) => ipcRenderer.invoke(ProductChannels.INSERT_PRODUTOS, produtos),
+  productQueries: {
+    getById: (id: string) => ipcRenderer.invoke(ProductChannels.GET_BY_ID, id),
+    gerAll: () => ipcRenderer.invoke(ProductChannels.GET_ALL),
+    insert: (product: Product) => ipcRenderer.invoke(ProductChannels.INSERT_PRODUCT, product),
+    update: (product: Product) => ipcRenderer.invoke(ProductChannels.UPDATE_PRODUCT, product),
+  },
 
-  // product price session
-  getPrecoProduto: (clienteId: number, produtoId: number) => ipcRenderer.invoke(ProductPriceChannels.GET_PRECO_PRODUTO, clienteId, produtoId),
-  getPrecoProdutos: () => ipcRenderer.invoke(ProductPriceChannels.GET_PRECO_PRODUTOS),
-  insertPrecoProduto: (precoProduto: PrecoProduto) => ipcRenderer.invoke(ProductPriceChannels.INSERT_PRECO_PRODUTO, precoProduto),
+  productPriceQueries: {
+    getAll: () => ipcRenderer.invoke(ProductPriceChannels.GET_ALL),
+    getByClientId: (clientId: string) => ipcRenderer.invoke(ProductPriceChannels.GET_BY_CLIENT_ID, clientId),
+    getByProductId: (productID: string) => ipcRenderer.invoke(ProductPriceChannels.GET_BY_PRODUCT_ID, productID),
+    insert: (productPrice: ProductPrice) => ipcRenderer.invoke(ProductPriceChannels.INSERT_PRODUCT_PRICE, productPrice),
+    update: (productPrice: ProductPrice) => ipcRenderer.invoke(ProductPriceChannels.UPDATE_PRODUCT_PRICE, productPrice),
+  },
+
+  orderQueries: {
+    getById: (id: string) => ipcRenderer.invoke(OrderChannels.GET_BY_ID, id),
+    getAll: () => ipcRenderer.invoke(OrderChannels.GET_ALL),
+    insert: (client: Client) => ipcRenderer.invoke(OrderChannels.INSERT_ORDER, client),
+    getByClientId: (clientId: string) => ipcRenderer.invoke(OrderChannels.GET_BY_CLIENT_ID, clientId),
+  }
 });

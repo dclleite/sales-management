@@ -15,6 +15,6 @@ declare interface Window {
     // product price session
     getPrecoProduto: (clienteId: number, produtoId: number) => Promise<any>
     getPrecoProdutos: () => Promise<any>
-    insertPrecoProduto: (precoProduto: import('../db/model/PrecoProduto').PrecoProduto) => Promise<number[]>
+    insertPrecoProduto: (precoProduto: import('../db/model/ProductPrice').ProductPrice) => Promise<number[]>
   }
 }
