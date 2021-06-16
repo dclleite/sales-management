@@ -12,9 +12,9 @@ export type Client = {
   state: string
 }
 
-export enum CustomerChannels {
-  GET_CLIENT = 'get-client',
-  GET_CLIENTS = 'get-clients',
+export enum ClientChannels {
+  GET_BY_ID = 'get-client',
+  GET_ALL = 'get-clients',
   INSERT_CLIENT = 'insert-client',
   UPDATE_CLIENT = 'update-client',
 }

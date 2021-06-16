@@ -23,17 +23,15 @@ exports.up = function (knex) {
       table.string('street');
       table.string('streetNumber');
       table.string('neighborhood');
-      table.string('cep');
+      table.string('zipCode');
       table.string('city');
       table.string('state');
     })
     .createTable('product', function (table) {
       table.uuid('id').primary();
       table.string('name').notNullable();
-      table.uuid('unitId').notNullable();
+      table.string('unit').notNullable();
       table.decimal('price').notNullable();
-
-      table.foreign('unitId').references('id').inTable('unit');
     })
     .createTable('productPrice', function (table) {
       table.uuid('id').primary();
@@ -47,8 +45,8 @@ exports.up = function (knex) {
     .createTable('order', function (table) {
       table.uuid('id').primary();
       table.uuid('clientId').notNullable();
-      table.date('orderDate').notNullable();
-      table.date('deliveryDate').notNullable();
+      table.string('orderDate').notNullable();
+      table.string('deliveryDate').notNullable();
 
       table.foreign('clientId').references('id').inTable('client');
     })
@@ -61,7 +59,22 @@ exports.up = function (knex) {
       table.foreign('orderId').references('id').inTable('order');
       table.foreign('productId').references('id').inTable('product');
     })
-    ;
+    .createTable('dailyProduction', function (table) {
+      table.uuid('id').primary();
+      table.uuid('productId').notNullable();
+      table.string('date').notNullable();
+      table.integer('quantity').notNullable();
+
+      table.foreign('productId').references('id').inTable('product');
+    })
+    .createTable('productStock', function (table) {
+      table.uuid('id').primary();
+      table.uuid('productId').notNullable();
+      table.integer('quantity').notNullable();
+      table.integer('reservedQuantity').notNullable();
+
+      table.foreign('productId').references('id').inTable('product');
+    });
 
 };
 
@@ -72,5 +85,7 @@ exports.down = function (knex) {
     .dropTable("productPrice")
     .dropTable("order")
     .dropTable("orderProduct")
+    .dropTable("dailyProduction")
+    .dropTable("productStock")
     .dropTable("product");
 };
