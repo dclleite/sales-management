@@ -3,6 +3,9 @@ import { Client, ClientChannels } from "../db/model/Client";
 import { ProductPrice, ProductPriceChannels } from "../db/model/ProductPrice";
 import { Product, ProductChannels } from "../db/model/Product";
 import { OrderChannels } from "../db/model/Order";
+import { DailyProduction, DailyProductionChannels } from "../db/model/DailyProduction";
+import { ProductStockChannels } from "../db/model/ProductStock";
+import { OrderProduct, OrderProductChannels } from "../db/model/OrderProduct";
 
 
 contextBridge.exposeInMainWorld("api", {
@@ -33,5 +36,25 @@ contextBridge.exposeInMainWorld("api", {
     getAll: () => ipcRenderer.invoke(OrderChannels.GET_ALL),
     insert: (client: Client) => ipcRenderer.invoke(OrderChannels.INSERT_ORDER, client),
     getByClientId: (clientId: string) => ipcRenderer.invoke(OrderChannels.GET_BY_CLIENT_ID, clientId),
+  },
+  orderProductQueries: {
+    getAll: () => ipcRenderer.invoke(OrderProductChannels.GET_ALL),
+    getById: (id: string) => ipcRenderer.invoke(OrderProductChannels.GET_BY_ID, id),
+    insert: (orderProduct: OrderProduct) => ipcRenderer.invoke(OrderProductChannels.INSERT, orderProduct),
+    getByOrderId: (orderId: string) => ipcRenderer.invoke(OrderProductChannels.GET_BY_ORDER_ID, orderId),
+  },
+
+  dailyProductionQueries: {
+    getAll: () => ipcRenderer.invoke(DailyProductionChannels.GET_ALL),
+    getById: (productId: string) => ipcRenderer.invoke(DailyProductionChannels.GET_BY_PRODUCT_ID, productId),
+    insert: (dailyProduction: DailyProduction) => ipcRenderer.invoke(DailyProductionChannels.INSERT, dailyProduction),
+    update: (dailyProduction: DailyProduction) => ipcRenderer.invoke(DailyProductionChannels.UPDATE, dailyProduction),
+  },
+
+  productStockQueries: {
+    getAll: () => ipcRenderer.invoke(ProductStockChannels.GET_ALL),
+    getById: (productId: string) => ipcRenderer.invoke(ProductStockChannels.GET_BY_PRODUCT_ID, productId),
+    insert: (productStock: DailyProduction) => ipcRenderer.invoke(ProductStockChannels.INSERT, productStock),
+    update: (productStock: DailyProduction) => ipcRenderer.invoke(ProductStockChannels.UPDATE, productStock),
   }
 });
