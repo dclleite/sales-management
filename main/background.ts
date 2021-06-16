@@ -1,6 +1,9 @@
-import { app } from "electron";
+import { app, ipcMain } from "electron";
 import serve from "electron-serve";
 import { createWindow } from "./helpers";
+import path from "path";
+
+import './services'
 
 const isProd: boolean = process.env.NODE_ENV === "production";
 
@@ -16,6 +19,9 @@ if (isProd) {
   const mainWindow = createWindow("main", {
     width: 1000,
     height: 600,
+    webPreferences: {
+      preload: path.join(__dirname, "../app/preload.js"),
+    },
   });
 
   if (isProd) {

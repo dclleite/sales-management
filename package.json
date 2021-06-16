@@ -12,7 +12,10 @@
   },
   "dependencies": {
     "electron-serve": "^1.1.0",
-    "electron-store": "^7.0.2"
+    "electron-store": "^7.0.2",
+    "knex": "^0.95.4",
+    "sqlite3": "^5.0.2",
+    "uuidv4": "^6.2.8"
   },
   "devDependencies": {
     "@types/node": "^14.6.4",
