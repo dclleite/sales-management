@@ -26,7 +26,7 @@ export function Menu() {
             Clientes
           </button>
         </Link>
-        <Link href='/client'>
+        <Link href='/product'>
           <button>
             <ProductsIcon />
             Produtos

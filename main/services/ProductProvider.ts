@@ -21,5 +21,4 @@ ipcMain.handle(ProductChannels.INSERT_PRODUCT, (event, product: Product) => {
 
 ipcMain.handle(ProductChannels.UPDATE_PRODUCT, (event, product: Product) => {
   return knexConnection<Product>('product').where('id', product.id).update(product)
-
 });

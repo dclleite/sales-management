@@ -18,7 +18,7 @@ contextBridge.exposeInMainWorld("api", {
 
   productQueries: {
     getById: (id: string) => ipcRenderer.invoke(ProductChannels.GET_BY_ID, id),
-    gerAll: () => ipcRenderer.invoke(ProductChannels.GET_ALL),
+    getAll: () => ipcRenderer.invoke(ProductChannels.GET_ALL),
     insert: (product: Product) => ipcRenderer.invoke(ProductChannels.INSERT_PRODUCT, product),
     update: (product: Product) => ipcRenderer.invoke(ProductChannels.UPDATE_PRODUCT, product),
   },
