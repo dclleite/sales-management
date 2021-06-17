@@ -1,15 +1,15 @@
 export type Client = {
   id?: string
   name: string
-  cpfCnpj: string
-  phone: string
-  email: string
-  street: string
-  streetNumber: string
-  neighborhood: string
-  cep: string
-  city: string
-  state: string
+  cpfCnpj?: string
+  phone?: string
+  email?: string
+  street?: string
+  streetNumber?: string
+  neighborhood?: string
+  cep?: string
+  city?: string
+  state?: string
 }
 
 export enum ClientChannels {

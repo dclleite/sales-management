@@ -1,18 +1,18 @@
 declare interface Window {
   api: {
+    clientQueries: {
+      getById: (id: string) => Promise<import('../db/model/Client').Client>
+      getAll: () => Promise<import('../db/model/Client').Client[]>
+      insert: (client: import('../db/model/Client').Client) => Promise<number[]>
+      update: (client: import('../db/model/Client').Client) => Promise<number>
+    }
 
     productQueries: {
-      getById: (id: string) => Promise<import('../db/model/Product').Product>,
+      getById: (id: string) => Promise<import('../db/model/Product').Product>
       getAll: () => Promise<import('../db/model/Product').Product[]>
-      insert: (product: import('../db/model/Product').Product) => Promise<number>,
-      update: (product: import('../db/model/Product').Product) => Promise<number>,
-    },
-    // client session
-    getCliente: (id: number) => Promise<import('../db/model/Cliente').Client>
-    getClientes: () => Promise<import('../db/model/Cliente').Client[]>
-    insertCliente: (cliente: import('../db/model/Cliente').Client) => Promise<number[]>
-    insertClientes: (clientes: import('../db/model/Cliente').Client[]) => Promise<number[]>
-
+      insert: (product: import('../db/model/Product').Product) => Promise<number>
+      update: (product: import('../db/model/Product').Product) => Promise<number>
+    }
 
     // product price session
     getPrecoProduct: (clienteId: number, productId: number) => Promise<any>

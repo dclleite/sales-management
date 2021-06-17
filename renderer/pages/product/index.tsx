@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import Head from 'next/head'
-import { Button } from '../components/Button'
-import { SearchInput } from '../components/SearchInput'
-import { TextInput } from '../components/TextInput'
-import { Table } from '../components/Table'
-import { PageControl } from '../components/PageControl'
+import { Button } from '../../components/Button'
+import { SearchInput } from '../../components/SearchInput'
+import { TextInput } from '../../components/TextInput'
+import { Table } from '../../components/Table'
+import { PageControl } from '../../components/PageControl'
 
-import { PencilIcon } from '../components/Icons'
+import { PencilIcon } from '../../components/Icons'
 
-import styles from '../styles/product.module.scss'
-import { getProducts, saveProduct } from '../services/ProductService'
-import { Product } from '../../db/model/Product'
+import styles from './styles.module.scss'
+import { getProducts, saveProduct } from '../../services/ProductService'
 function renderActTable() {
   return (
     <div style={{ display: 'flex', padding: 'auto' }}>
@@ -31,26 +30,26 @@ interface ProductsSearch {
 }
 
 function getProductsByPage(page: number, set: Function): Promise<ProductsSearch> {
-  return getProducts().then(products => {
+  return getProducts().then((products) => {
     const startIndex = (page - 1) * PRODUCTS_PER_PAGE
     const pageProducts = products.slice(startIndex, startIndex + PRODUCTS_PER_PAGE)
     const newProducts = pageProducts.map((product) => [
       product.name,
       product.unit,
       formatPrice(product.price),
-      renderActTable()
+      renderActTable(),
     ])
     if (newProducts.length > 0) {
       set(newProducts)
     }
     return {
       products: newProducts,
-      totalPages: Math.ceil(products.length / PRODUCTS_PER_PAGE)
+      totalPages: Math.ceil(products.length / PRODUCTS_PER_PAGE),
     }
   })
 }
 
-export default () => {
+function Product() {
   const [products, setProducts] = useState<(string | JSX.Element)[][]>([])
   const [page, setPage] = useState(1)
   const [lastPage, setLastPage] = useState(1)
@@ -60,10 +59,10 @@ export default () => {
     if (products.length === 0) {
       getProductsByPage(page, setProducts).then((search) => setLastPage(search.totalPages))
     }
-  })
+  }, [])
 
   function nextPage() {
-    getProductsByPage(page + 1, setProducts).then(newProducts => {
+    getProductsByPage(page + 1, setProducts).then((newProducts) => {
       if (newProducts.products.length > 0) {
         setPage(page + 1)
       }
@@ -97,3 +96,5 @@ export default () => {
     </React.Fragment>
   )
 }
+
+export default Product

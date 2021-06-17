@@ -45,3 +45,4 @@ jspm_packages
 .next
 
 db/database.sqlite3
+db/database.sqlite3:Zone.Identifier
