@@ -1,5 +1,5 @@
 import './ClientService'
-import './ProductService'
+import './ProductProvider'
 import './ProductPriceService'
 import './DailyProductionService'
 import './OrderProductService'
