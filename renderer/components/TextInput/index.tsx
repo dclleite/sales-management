@@ -16,6 +16,7 @@ export interface TextInputProps {
   validation?: (value: string) => boolean
   required?: boolean
   disabled?: boolean
+  style?: any
 }
 
 interface Feedback {
@@ -35,6 +36,7 @@ export function TextInput({
   validation,
   required = false,
   disabled = false,
+  style = {}
 }: TextInputProps) {
   const ref = useRef<HTMLInputElement>(null)
   const [isInputValid, setIsInputValid] = useState(true)
@@ -70,6 +72,10 @@ export function TextInput({
         </div>
       )
     }
+    return (
+      <div className={styles.icon}>
+      </div>
+    )
   }
 
   function renderFeedback() {
@@ -97,7 +103,7 @@ export function TextInput({
   }
 
   return (
-    <div className={styles.textInputContainer}>
+    <div className={styles.textInputContainer} style={{ ...style }}>
       <label className={styles.label}>{label}</label>
       <div className={`${styles.inputContainer} ${getStyleInputContainer()}`}>
         <input

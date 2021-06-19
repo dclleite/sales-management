@@ -10,6 +10,7 @@ import { PencilIcon } from '../../components/Icons'
 
 import styles from './styles.module.scss'
 import { getProducts, saveProduct } from '../../services/ProductService'
+import Link from 'next/link'
 function renderActTable() {
   return (
     <div style={{ display: 'flex', padding: 'auto' }}>
@@ -86,7 +87,9 @@ function Product() {
       <div className={styles.productContainer}>
         <div className={styles.header}>
           <SearchInput value='product' onChange={(value) => console.log(value)} />
-          <Button onClick={addProduct}>Adicionar novo produto</Button>
+          <Link href='/product/new'>
+            <Button >Adicionar novo produto</Button>
+          </Link>
         </div>
         <div className={styles.tableContainer}>
           <PageControl back={previousPage} next={nextPage} currentPage={page} totalPages={lastPage} />
