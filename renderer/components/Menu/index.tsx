@@ -1,5 +1,5 @@
 import React from 'react'
-import Image from 'next/image'
+// import Image from 'next/image'
 import Link from 'next/link'
 
 import { DashboardIcon, ClientsIcon, ProductsIcon, SalesIcon, BackupIcon } from '../Icons'
@@ -10,7 +10,7 @@ export function Menu() {
   return (
     <div className={styles.menuContainer}>
       <div className={styles.imageContainer}>
-        <Image width={160} height={107} src='/images/neoplast-logo.svg' objectFit='contain' />
+        {/* <Image width={160} height={107} src='/images/neoplast-logo.svg' objectFit='contain' /> */}
       </div>
 
       <div className={styles.buttons}>

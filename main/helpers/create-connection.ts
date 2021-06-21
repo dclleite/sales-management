@@ -1,11 +1,12 @@
 import Knex from 'knex'
 import path from "path";
+import isDev from 'electron-is-dev'
 
 export default () => {
   return Knex({
     client: 'sqlite3',
     connection: {
-      filename: path.join(__dirname, "../db/database.sqlite3"),
+      filename: isDev ? path.join(__dirname, "../db/database.sqlite3") : path.join(process.resourcesPath, "db"),
     },
     migrations: {
       directory: path.join(__dirname, "../db/migrations"),
@@ -15,5 +16,5 @@ export default () => {
       afterCreate: (conn, cb) => conn.run('PRAGMA foreign_keys = ON', cb)
     },
     useNullAsDefault: true,
-   })
+  })
 }
