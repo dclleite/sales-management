@@ -9,6 +9,7 @@ export interface TextInputProps {
   id?: string
   value: string
   label?: string
+  maxLength?: number
   feedback?: Feedback
   onChange: (value: string) => void
   onBlur?: (value: string, isInputValid: boolean) => void
@@ -16,7 +17,7 @@ export interface TextInputProps {
   validation?: (value: string) => boolean
   required?: boolean
   disabled?: boolean
-  style?: any
+  style?: React.CSSProperties
 }
 
 interface Feedback {
@@ -29,6 +30,7 @@ export function TextInput({
   name,
   id,
   label,
+  maxLength,
   feedback,
   onChange,
   onBlur,
@@ -36,7 +38,7 @@ export function TextInput({
   validation,
   required = false,
   disabled = false,
-  style = {}
+  style = {},
 }: TextInputProps) {
   const ref = useRef<HTMLInputElement>(null)
   const [isInputValid, setIsInputValid] = useState(true)
@@ -46,7 +48,7 @@ export function TextInput({
   const [failureFeedback, setFailureFeedback] = useState(false)
 
   useEffect(() => {
-    if (value.length > 0 && !isFocus && isInputValid) {
+    if (value.length > 0 && !isFocus && validation && isInputValid) {
       setSuccessfulFeedback(true)
       setFailureFeedback(false)
     } else if (!isInputValid && (validation || required)) {
@@ -72,10 +74,7 @@ export function TextInput({
         </div>
       )
     }
-    return (
-      <div className={styles.icon}>
-      </div>
-    )
+    return <div className={styles.icon}></div>
   }
 
   function renderFeedback() {
@@ -113,8 +112,8 @@ export function TextInput({
           name={name}
           id={id}
           value={value}
+          maxLength={maxLength}
           onChange={(event) => {
-            console.log(event.target.validationMessage)
             onChange(event.target.value)
           }}
           onBlur={(event) => {

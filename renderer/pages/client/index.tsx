@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Head from 'next/head'
+import Link from 'next/link'
 import { Button } from '../../components/Button'
 import { SearchInput } from '../../components/SearchInput'
 import { TextInput } from '../../components/TextInput'
@@ -91,7 +92,9 @@ function Client() {
       <div className={styles.clientContainer}>
         <div className={styles.header}>
           <SearchInput value='client' onChange={(value) => console.log(value)} />
-          <Button onClick={() => console.log('add client')}>Adicionar novo cliente</Button>
+          <Link href='/client/new-client'>
+            <Button>Adicionar novo cliente</Button>
+          </Link>
         </div>
         <div className={styles.tableContainer}>
           <PageControl back={previousPage} next={nextPage} currentPage={page} totalPages={lastPage} />
