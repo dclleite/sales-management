@@ -1,18 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import Head from 'next/head'
 import { Button } from '../../../components/Button'
-import { SearchInput } from '../../../components/SearchInput'
 import { TextInput } from '../../../components/TextInput'
-import { Table } from '../../../components/Table'
-import { PageControl } from '../../../components/PageControl'
-
-import { PencilIcon } from '../../../components/Icons'
-
 import styles from '../styles.module.scss'
-import { getProducts, saveProduct } from '../../../services/ProductService'
-import Link from 'next/link'
-
-const PRODUCTS_PER_PAGE = 10
+import { saveProduct } from '../../../services/ProductService'
+import Modal from '../../../components/Modal'
+import { useRouter } from 'next/dist/client/router'
 
 function formatPrice(price: number) {
   return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(price)
@@ -23,13 +16,23 @@ const UNITS = {
   g: 'g',
 }
 
+function renderModal(open, close) {
+  return <Modal open={open} >
+    <button onClick={close}>
+      fechar
+    </button>
+  </Modal>
+}
+
 function NewProduct() {
+  const router = useRouter()
   const [name, setName] = useState('')
   const [unit, setUnit] = useState('kg')
   const [price, setPrice] = useState(0)
+  const [openModal, setOpenModal] = useState(false)
 
   async function addProduct() {
-    saveProduct({ name, price, unit }).then(() => alert('Produto cadastrado com sucesso'))
+    saveProduct({ name, price, unit }).then(() => setOpenModal(true))
   }
 
   function priceValidation(value: string) {
@@ -39,6 +42,11 @@ function NewProduct() {
     } else {
       setPrice(Number.parseFloat(val) / 100)
     }
+  }
+
+  function redirect() {
+    setOpenModal(false)
+    router.push('/product')
   }
 
   return (
@@ -62,6 +70,7 @@ function NewProduct() {
           <Button onClick={addProduct}>Cadastrar</Button>
         </div>
       </div>
+      {renderModal(openModal, redirect)}
     </React.Fragment>
   )
 }

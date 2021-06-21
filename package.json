@@ -11,6 +11,7 @@
     "postinstall": "electron-builder install-app-deps"
   },
   "dependencies": {
+    "@material-ui/core": "^4.11.4",
     "electron-serve": "^1.1.0",
     "electron-store": "^7.0.2",
     "knex": "^0.95.4",
