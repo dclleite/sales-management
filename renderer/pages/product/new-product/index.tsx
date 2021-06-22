@@ -1,11 +1,13 @@
 import React, { useState } from 'react'
 import Head from 'next/head'
 import { Button } from '../../../components/Button'
+import FeedbackModal from '../../../components/FeedbackModal'
 import { TextInput } from '../../../components/TextInput'
 import styles from '../styles.module.scss'
 import { saveProduct } from '../../../services/ProductService'
 import Modal from '../../../components/Modal'
 import { useRouter } from 'next/dist/client/router'
+import BusinessAnalysis from '../../../img/BusinessAnalysis'
 
 function formatPrice(price: number) {
   return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(price)
@@ -70,7 +72,8 @@ function NewProduct() {
           <Button onClick={addProduct}>Cadastrar</Button>
         </div>
       </div>
-      {renderModal(openModal, redirect)}
+      {/* {renderModal(openModal, redirect)} */}
+      <FeedbackModal title='Produto cadastrado com sucesso!' image={<BusinessAnalysis />} buttonText='Ok' open={openModal} action={redirect} />
     </React.Fragment>
   )
 }
