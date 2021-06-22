@@ -25,13 +25,13 @@ export function cnpjMask(cnpj) {
   return cnpj
 }
 
-export function cellphoneMask(cellphone) {
-  if (cellphone) {
-    cellphone = cellphone.replace(/\D/g, '')
-    cellphone = cellphone.replace(/^(\d\d)(\d)/g, '($1) $2')
-    cellphone = cellphone.replace(/(\d{5})(\d)/, '$1-$2')
+export function cellphoneMask(phone: string, isCellphone: boolean = true) {
+  if (phone) {
+    phone = phone.replace(/\D/g, '')
+    phone = phone.replace(/^(\d\d)(\d)/g, '($1) $2')
+    phone = isCellphone ? phone.replace(/(\d{5})(\d)/, '$1-$2') : phone.replace(/(\d{4})(\d)/, '$1-$2')
   }
-  return cellphone
+  return phone
 }
 
 export function cepMask(cep) {

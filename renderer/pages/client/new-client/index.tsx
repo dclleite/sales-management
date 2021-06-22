@@ -3,6 +3,8 @@ import Head from 'next/head'
 import Link from 'next/link'
 
 import { cellphoneMask, cepMask, cpfMask, cnpjMask } from '../../../utils/Mask'
+import { validateCpf, validateCnpj, validateCellphone, validatePhone } from '../../../utils/Validators'
+import { saveClient } from '../../../services/ClientService'
 
 import { TextInput } from '../../../components/TextInput'
 import { Button } from '../../../components/Button'
@@ -21,8 +23,37 @@ function NewClient() {
   const [city, setCity] = useState('')
   const [state, setState] = useState('')
 
-  function cleanCpfCnpj(cpfCnpj) {
+  function cleanCpfCnpj(cpfCnpj: string) {
     return cpfCnpj.replace(/[^0-9]/g, '')
+  }
+
+  function validateForm() {
+    if (name.length === 0) {
+      return false
+    }
+
+    if (cpfCnpj.length > 0) {
+      if (cleanCpfCnpj(cpfCnpj).length < 12 && !validateCpf(cpfCnpj)) {
+        return false
+      } else if (cleanCpfCnpj(cpfCnpj).length >= 12 && !validateCnpj(cpfCnpj)) {
+        return false
+      }
+    }
+
+    if (phone.length > 0) {
+      if (phone.length < 15 && !validatePhone(phone)) {
+        return false
+      } else if (phone.length === 15 && !validateCellphone(phone)) {
+        return false
+      }
+    }
+    return true
+  }
+
+  function addClient() {
+    if (validateForm()) {
+      saveClient({ name, cpfCnpj, phone, email, street: address, streetNumber: number, neighborhood, cep, city, state })
+    }
   }
 
   return (
@@ -57,6 +88,13 @@ function NewClient() {
                 setCpfCnpj(cnpjMask(value))
               }
             }}
+            validation={(value) => {
+              if (cleanCpfCnpj(value).length < 12) {
+                return validateCpf(value)
+              } else {
+                return validateCnpj(value)
+              }
+            }}
           />
         </div>
 
@@ -68,7 +106,18 @@ function NewClient() {
             value={phone}
             maxLength={15}
             onChange={(value) => {
-              setPhone(cellphoneMask(value))
+              if (value.length > 0 && value.length < 15) {
+                setPhone(cellphoneMask(value, false))
+              } else {
+                setPhone(cellphoneMask(value))
+              }
+            }}
+            validation={(value) => {
+              if (value.length > 0 && value.length < 15) {
+                return validatePhone(value)
+              } else {
+                return validateCellphone(value)
+              }
             }}
           />
           <TextInput name='email' label='E-mail' value={email} onChange={setEmail} />
@@ -99,9 +148,11 @@ function NewClient() {
         </div>
 
         <div className={styles.buttonContainer}>
-          <Button>Cadastrar</Button>
+          <Button disabled={!validateForm()} onClick={addClient}>
+            Cadastrar
+          </Button>
           <Link href='/client'>
-            <a>Cancelar</a>
+            <a className={styles.cancel}>Cancelar</a>
           </Link>
         </div>
       </div>

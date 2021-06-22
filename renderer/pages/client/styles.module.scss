@@ -47,7 +47,13 @@
 
   .buttonContainer {
     display: flex;
+    align-items: center;
     gap: 45px;
     margin-top: 20px;
+
+    .cancel {
+      color: var(--orange-500);
+      text-align: center;
+    }
   }
 }

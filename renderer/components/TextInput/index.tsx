@@ -121,7 +121,7 @@ export function TextInput({
             if (required) {
               newIsInputValid = value.length > 0
             }
-            if (newIsInputValid && validation) {
+            if (newIsInputValid && value.length > 0 && validation) {
               newIsInputValid = validation(value)
             }
             setIsInputValid(newIsInputValid)
