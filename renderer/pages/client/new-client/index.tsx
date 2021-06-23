@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
+
 import Head from 'next/head'
 import Link from 'next/link'
 
@@ -8,10 +10,13 @@ import { saveClient } from '../../../services/ClientService'
 
 import { TextInput } from '../../../components/TextInput'
 import { Button } from '../../../components/Button'
+import FeedbackModal from '../../../components/FeedbackModal'
 
 import styles from '../styles.module.scss'
 
 function NewClient() {
+  const router = useRouter()
+
   const [name, setName] = useState('')
   const [cpfCnpj, setCpfCnpj] = useState('')
   const [phone, setPhone] = useState('')
@@ -22,6 +27,8 @@ function NewClient() {
   const [cep, setCep] = useState('')
   const [city, setCity] = useState('')
   const [state, setState] = useState('')
+
+  const [openModal, setOpenModal] = useState(false)
 
   function cleanCpfCnpj(cpfCnpj: string) {
     return cpfCnpj.replace(/[^0-9]/g, '')
@@ -52,8 +59,26 @@ function NewClient() {
 
   function addClient() {
     if (validateForm()) {
-      saveClient({ name, cpfCnpj, phone, email, street: address, streetNumber: number, neighborhood, cep, city, state })
+      saveClient({
+        name,
+        cpfCnpj,
+        phone,
+        email,
+        street: address,
+        streetNumber: number,
+        neighborhood,
+        cep,
+        city,
+        state,
+      }).then(() => {
+        setOpenModal(true)
+      })
     }
+  }
+
+  function redirect() {
+    setOpenModal(false)
+    router.push('/client')
   }
 
   return (
@@ -156,6 +181,13 @@ function NewClient() {
           </Link>
         </div>
       </div>
+      <FeedbackModal
+        title='Cliente cadastrado com sucesso!'
+        image={<img src='/images/customer-successfully-registered.svg' />}
+        buttonText='Ok'
+        open={openModal}
+        action={redirect}
+      />
     </React.Fragment>
   )
 }

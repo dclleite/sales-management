@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useRouter } from 'next/router'
 import Head from 'next/head'
 import { Button } from '../../../components/Button'
 import FeedbackModal from '../../../components/FeedbackModal'
@@ -6,7 +7,6 @@ import { TextInput } from '../../../components/TextInput'
 import styles from '../styles.module.scss'
 import { saveProduct } from '../../../services/ProductService'
 import Modal from '../../../components/Modal'
-import { useRouter } from 'next/dist/client/router'
 import BusinessAnalysis from '../../../img/BusinessAnalysis'
 
 function formatPrice(price: number) {
@@ -16,14 +16,6 @@ function formatPrice(price: number) {
 const UNITS = {
   kg: 'kg',
   g: 'g',
-}
-
-function renderModal(open, close) {
-  return <Modal open={open} >
-    <button onClick={close}>
-      fechar
-    </button>
-  </Modal>
 }
 
 function NewProduct() {
@@ -72,8 +64,13 @@ function NewProduct() {
           <Button onClick={addProduct}>Cadastrar</Button>
         </div>
       </div>
-      {/* {renderModal(openModal, redirect)} */}
-      <FeedbackModal title='Produto cadastrado com sucesso!' image={<BusinessAnalysis />} buttonText='Ok' open={openModal} action={redirect} />
+      <FeedbackModal
+        title='Produto cadastrado com sucesso!'
+        image={<img style={{ marginBottom: 90 }} src='/images/product-successfully-registered.svg' />}
+        buttonText='Ok'
+        open={openModal}
+        action={redirect}
+      />
     </React.Fragment>
   )
 }

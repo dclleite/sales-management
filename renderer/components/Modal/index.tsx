@@ -1,12 +1,24 @@
-import React from 'react';
-import { Dialog } from '@material-ui/core';
+import React from 'react'
 
-function Modal({ open, children }) {
+import { Dialog, DialogProps } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core/styles'
+
+const useStyles = makeStyles({
+  paper: {
+    background: '#FFFFFF',
+    border: '1px solid #C7C7C7',
+    boxSizing: 'border-box',
+    borderRadius: 14,
+  },
+})
+
+function Modal({ children, ...rest }: DialogProps) {
+  const { paper } = useStyles()
   return (
-    <Dialog open={open}>
+    <Dialog classes={{ paper }} {...rest}>
       {children}
     </Dialog>
-  );
-};
+  )
+}
 
 export default Modal
