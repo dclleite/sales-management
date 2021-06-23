@@ -11,7 +11,7 @@ export interface TextInputProps {
   label?: string
   maxLength?: number
   feedback?: Feedback
-  onChange: (value: string) => void
+  onChange: (value: string, inputName?: string) => void
   onBlur?: (value: string, isInputValid: boolean) => void
   onFocus?: () => void
   validation?: (value: string) => boolean
@@ -114,7 +114,7 @@ export function TextInput({
           value={value}
           maxLength={maxLength}
           onChange={(event) => {
-            onChange(event.target.value)
+            onChange(event.target.value, event.target.name)
           }}
           onBlur={(event) => {
             let newIsInputValid = true

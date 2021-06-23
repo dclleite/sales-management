@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
+
 import { Button } from '../../components/Button'
 import { SearchInput } from '../../components/SearchInput'
-import { TextInput } from '../../components/TextInput'
 import { Table } from '../../components/Table'
 import { PageControl } from '../../components/PageControl'
-
 import { PencilIcon } from '../../components/Icons'
 
-import { getClients, saveClient } from '../../services/ClientService'
+import { getClients } from '../../services/ClientService'
 
 import { Client as ClientModel } from '../../../db/model/Client'
 
@@ -78,8 +77,30 @@ function Client() {
   function renderActTable(client: ClientModel) {
     return (
       <div style={{ display: 'flex', gap: 30, alignItems: 'center', justifyContent: 'space-between' }}>
-        <a onClick={() => console.log(client)}>Ver endereço</a>
-        <PencilIcon />
+        <Link
+          href={{
+            pathname: '/client/new-client',
+            query: {
+              clientId: client.id,
+            },
+          }}
+        >
+          <a>Ver mais</a>
+        </Link>
+
+        <Link
+          href={{
+            pathname: '/client/new-client',
+            query: {
+              clientId: client.id,
+              editing: true,
+            },
+          }}
+        >
+          <button>
+            <PencilIcon />
+          </button>
+        </Link>
       </div>
     )
   }

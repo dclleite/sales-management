@@ -12,16 +12,16 @@ export function Table({ headers, bodies, ...rest }: TableProps) {
     <table className={styles.tableContainer} {...rest}>
       <thead>
         <tr className={styles.teste}>
-          {headers.map((value) => (
-            <th key={value}>{value}</th>
+          {headers.map((value, index) => (
+            <th key={`${value}${index}`}>{value}</th>
           ))}
         </tr>
       </thead>
       <tbody>
         {bodies.map((trValue, index) => (
           <tr key={`trKey${index}`}>
-            {trValue.map((tdValue) => (
-              <td key={`${tdValue}`}>{tdValue}</td>
+            {trValue.map((tdValue, index) => (
+              <td key={`${tdValue}${index}`}>{tdValue}</td>
             ))}
           </tr>
         ))}
