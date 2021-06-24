@@ -4,8 +4,8 @@ export function getClient(id: string): Promise<Client> {
   return window.api.clientQueries.getById(id)
 }
 
-export function getClients(): Promise<Client[]> {
-  return window.api.clientQueries.getAll()
+export function getClients(searchName?: string): Promise<Client[]> {
+  return window.api.clientQueries.getAll(searchName)
 }
 
 export function saveClient(client: Client): Promise<number[]> {

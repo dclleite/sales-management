@@ -9,7 +9,7 @@ declare interface Window {
 
     clientQueries: {
       getById: (id: string) => Promise<import('../db/model/Client').Client>
-      getAll: () => Promise<import('../db/model/Client').Client[]>
+      getAll: (serachName?: string) => Promise<import('../db/model/Client').Client[]>
       insert: (client: import('../db/model/Client').Client) => Promise<number[]>
       update: (client: import('../db/model/Client').Client) => Promise<number>
     },

@@ -11,7 +11,7 @@ import { OrderProduct, OrderProductChannels } from "../db/model/OrderProduct";
 contextBridge.exposeInMainWorld("api", {
   clientQueries: {
     getById: (id: string) => ipcRenderer.invoke(ClientChannels.GET_BY_ID, id),
-    getAll: () => ipcRenderer.invoke(ClientChannels.GET_ALL),
+    getAll: (searchName?: string) => ipcRenderer.invoke(ClientChannels.GET_ALL, searchName),
     insert: (client: Client) => ipcRenderer.invoke(ClientChannels.INSERT_CLIENT, client),
     update: (client: Client) => ipcRenderer.invoke(ClientChannels.UPDATE_CLIENT, client),
   },
