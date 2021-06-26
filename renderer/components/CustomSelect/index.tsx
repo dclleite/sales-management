@@ -14,8 +14,8 @@ interface ISelectProps {
 
 export function CustomSelect({ items, keyProp = 'id', titleProp = 'name', onChange, label, style = {}, value = '' }: ISelectProps) {
   function getValue() {
-    const selected = items.find(item => item[keyProp] ?? item === value[keyProp] ?? value)
-    return selected[keyProp] ?? selected
+    const selected = items.find(item => (item[keyProp] ?? item) === (value[keyProp] ?? value))
+    return selected ? selected[keyProp] ?? selected : ''
   }
   return (
     <div className={styles.custmSelectContainer} style={{ display: 'flex', flexDirection: 'column', ...style }}>
