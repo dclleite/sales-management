@@ -9,6 +9,7 @@ import { getProductById, getProducts, saveProduct, updateProduct } from '../../.
 import Modal from '../../../components/Modal'
 import Link from 'next/link'
 import { Product } from '../../../../db/model/Product'
+import { CustomSelect } from '../../../components/CustomSelect'
 
 function formatPrice(price: number) {
   return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(price)
@@ -34,7 +35,6 @@ function NewProduct() {
   const [openModal, setOpenModal] = useState(false)
 
   useEffect(() => {
-    console.log(productId)
     if (productId) {
       getProductById(productId as string).then(setProduct)
     }
@@ -62,6 +62,10 @@ function NewProduct() {
     router.push('/product')
   }
 
+  function onChangeUnit(event: any) {
+    setProduct({ ...product, unit: event.target.value })
+  }
+
   return (
     <React.Fragment>
       <Head>
@@ -71,7 +75,8 @@ function NewProduct() {
         <div className={styles.header}></div>
         <div style={{ display: 'flex', width: '100%', justifyContent: 'flex-start' }}>
           <TextInput label='Produto' value={product.name} onChange={(name) => setProduct({ ...product, name })} />
-          <TextInput style={{ width: '100px', marginLeft: '16px' }} label='Unidade' value={product.unit} onChange={(unit) => setProduct({ ...product, unit })} />
+          {/* <TextInput style={{ width: '100px', marginLeft: '16px' }} label='Unidade' value={product.unit} onChange={(unit) => setProduct({ ...product, unit })} /> */}
+          <CustomSelect style={{ marginLeft: '16px' }} value={product.unit} items={Object.values(UNITS)} onChange={onChangeUnit} label="Unidade" />
           <TextInput
             style={{ width: '150px', marginLeft: '16px' }}
             label='Preço'

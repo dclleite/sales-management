@@ -1,23 +1,27 @@
 import { Select, MenuItem } from '@material-ui/core';
 import React from 'react'
+import styles from './styles.module.scss'
 
 interface ISelectProps {
   items: any[],
   keyProp?: string,
   titleProp?: string,
-  onChange: (event: any) => void
+  label: string,
+  onChange: (event: any) => void,
+  style?: any,
+  value: any
 }
 
-function CustomSelect({ items, keyProp = 'id', titleProp = 'name', onChange }: ISelectProps) {
-  console.log(items, keyProp, titleProp)
-
+export function CustomSelect({ items, keyProp = 'id', titleProp = 'name', onChange, label, style = {}, value = '' }: ISelectProps) {
   return (
-    <Select onChange={onChange}>
-      {items.map(item => <MenuItem key={item[keyProp]} value={item}>{item[titleProp]}</MenuItem>)}
-    </Select>
+    <div className={styles.custmSelectContainer} style={{ display: 'flex', flexDirection: 'column', ...style }}>
+      <label className={styles.label} >{label}</label>
+      <div className={styles.selectContainer}>
+        <Select value={value} className={styles.select} onChange={onChange} label="texto" disableUnderline>
+          {items.map(item => <MenuItem key={item[keyProp] ?? item} value={item}>{item[titleProp] ?? item}</MenuItem>)}
+        </Select>
+      </div>
+    </div>
   )
 
 }
-
-
-export default CustomSelect;
