@@ -18,14 +18,16 @@ function formatCustomersToTable(clients: ClientModel[], render: (client: ClientM
   return clients.map((client) => [client.name, client.cpfCnpj, client.phone, render(client)])
 }
 
-function getClientsByPage(page: number): Promise<ClientsSearch> {
-  return getClients().then((clients) => {
+function getClientsByPage(page: number, searchName?: string): Promise<ClientsSearch> {
+
+  return getClients(searchName ? `%${searchName}%` : '').then((clients) => {
     const startIndex = (page - 1) * CLIENTS_PER_PAGE
     const pageClients = clients.slice(startIndex, startIndex + CLIENTS_PER_PAGE)
 
     return {
       clients: pageClients,
       totalPages: Math.ceil(clients.length / CLIENTS_PER_PAGE),
+      searchedName: searchName
     }
   })
 }
@@ -33,14 +35,19 @@ function getClientsByPage(page: number): Promise<ClientsSearch> {
 interface ClientsSearch {
   clients: ClientModel[]
   totalPages: number
+  searchedName: string
 }
 
 const CLIENTS_PER_PAGE = 10
 
 function Client() {
   const [clients, setClients] = useState<ClientModel[]>([])
+  const [searchName, setSearchName] = useState('')
+  const [searchedName, setSearchedName] = useState('')
+
   const [page, setPage] = useState(1)
   const [lastPage, setLastPage] = useState(1)
+
   const headers = ['Name/Razão Social', 'CPF/CNPJ', 'Telefone', 'Ações']
 
   useEffect(() => {
@@ -53,22 +60,27 @@ function Client() {
   }, [])
 
   function nextPage() {
-    const newPage = page + 1
-    getClientsByPage(newPage).then((clientsSearch) => {
-      if (clientsSearch.clients.length > 0) {
-        setClients(clientsSearch.clients)
-        setPage(newPage)
-      }
-    })
+    if(lastPage > 1) {
+      const newPage = page + 1
+      getClientsByPage(newPage, searchedName).then((clientsSearch) => {
+        if (clientsSearch.clients.length > 0) {
+          setClients(clientsSearch.clients)
+          setPage(newPage)
+          setSearchedName(clientsSearch.searchedName)
+        }
+      })
+    }
+   
   }
 
   function previousPage() {
     if (page > 1) {
       const newPage = page - 1
-      getClientsByPage(newPage).then((clientsSearch) => {
+      getClientsByPage(newPage, searchedName).then((clientsSearch) => {
         if (clientsSearch.clients.length > 0) {
           setClients(clientsSearch.clients)
           setPage(newPage)
+          setSearchedName(clientsSearch.searchedName)
         }
       })
     }
@@ -112,7 +124,17 @@ function Client() {
       </Head>
       <div className={styles.clientContainer}>
         <div className={styles.header}>
-          <SearchInput value='client' onChange={(value) => console.log(value)} />
+          <SearchInput value={searchName} onChange={setSearchName} onClick={() => {
+            getClientsByPage(1, searchName).then((clientsSearch) => {
+              if (clientsSearch.clients.length > 0) {
+                setClients(clientsSearch.clients)
+                setPage(1)
+                setLastPage(clientsSearch.totalPages)
+                setSearchedName(clientsSearch.searchedName)
+              }
+            })
+
+          }} />
           <Link href='/client/new-client'>
             <Button>Adicionar novo cliente</Button>
           </Link>

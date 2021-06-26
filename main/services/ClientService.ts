@@ -11,8 +11,9 @@ ipcMain.handle(ClientChannels.GET_BY_ID, (event, id: string) => {
   return knexConnection<Client>('client').where('id', id).first()
 });
 
-ipcMain.handle(ClientChannels.GET_ALL, (event) => {
-  return knexConnection<Client>('client')
+ipcMain.handle(ClientChannels.GET_ALL, (event, searchName?: string) => {
+  const clients = knexConnection<Client>('client')
+  return searchName ? clients.where('name', 'like', searchName) : clients
 });
 
 ipcMain.handle(ClientChannels.INSERT_CLIENT, (event, client: Client) => {
