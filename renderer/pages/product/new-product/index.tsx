@@ -66,6 +66,10 @@ function NewProduct() {
     setProduct({ ...product, unit: event.target.value })
   }
 
+  function validateForm() {
+    return product.price > 0 && product.name && product.unit
+  }
+
   return (
     <React.Fragment>
       <Head>
@@ -85,7 +89,7 @@ function NewProduct() {
           />
         </div>
         <div style={{ display: 'flex', width: '100%', justifyContent: 'flex-start' }}>
-          <Button onClick={addProduct}>Cadastrar</Button>
+          <Button disabled={!validateForm()} onClick={addProduct}>Cadastrar</Button>
           <Link href='/product'>
             <a className={styles.cancel}>{'Cancelar'}</a>
           </Link>

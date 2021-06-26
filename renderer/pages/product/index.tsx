@@ -100,7 +100,7 @@ function Product() {
       <div className={styles.productContainer}>
         <div className={styles.header}>
           <SearchInput value='product' onChange={(value) => console.log(value)} />
-          <Link href='/product/new-product'>
+          <Link href='/daily-production'>
             <Button>Adicionar novo produto</Button>
           </Link>
         </div>

@@ -37,6 +37,7 @@ contextBridge.exposeInMainWorld("api", {
     insert: (client: Client) => ipcRenderer.invoke(OrderChannels.INSERT_ORDER, client),
     getByClientId: (clientId: string) => ipcRenderer.invoke(OrderChannels.GET_BY_CLIENT_ID, clientId),
   },
+
   orderProductQueries: {
     getAll: () => ipcRenderer.invoke(OrderProductChannels.GET_ALL),
     getById: (id: string) => ipcRenderer.invoke(OrderProductChannels.GET_BY_ID, id),

@@ -22,7 +22,7 @@ export function CustomSelect({ items, keyProp = 'id', titleProp = 'name', onChan
       <label className={styles.label} >{label}</label>
       <div className={styles.selectContainer}>
         <Select value={getValue()} className={styles.select} onChange={onChange} label="texto" disableUnderline>
-          {items.map(item => <MenuItem key={item[keyProp] ?? item} value={item}>{item[titleProp] ?? item}</MenuItem>)}
+          {items.map(item => <MenuItem key={item[keyProp] ?? item} value={item[keyProp] ?? item}>{item[titleProp] ?? item}</MenuItem>)}
         </Select>
       </div>
     </div>
