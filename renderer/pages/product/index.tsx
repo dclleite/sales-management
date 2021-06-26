@@ -11,10 +11,23 @@ import { PencilIcon } from '../../components/Icons'
 import styles from './styles.module.scss'
 import { getProducts, saveProduct } from '../../services/ProductService'
 import Link from 'next/link'
-function renderActTable() {
+function renderActTable(productId) {
   return (
     <div style={{ display: 'flex', padding: 'auto' }}>
-      <PencilIcon />
+
+      <Link
+        href={{
+          pathname: '/product/new-product',
+          query: {
+            productId,
+            editing: true,
+          },
+        }}
+      >
+        <button>
+          <PencilIcon />
+        </button>
+      </Link>
     </div>
   )
 }
@@ -38,7 +51,7 @@ function getProductsByPage(page: number, set: Function): Promise<ProductsSearch>
       product.name,
       product.unit,
       formatPrice(product.price),
-      renderActTable(),
+      renderActTable(product.id),
     ])
     if (newProducts.length > 0) {
       set(newProducts)
