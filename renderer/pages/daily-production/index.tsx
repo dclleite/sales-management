@@ -16,7 +16,7 @@ import { CustomDatePicker } from '../../components/DatePicker'
 const initialState = {
   id: '',
   productId: '',
-  date: '',
+  date: new Date().toISOString(),
   quantity: 0
 }
 
@@ -64,6 +64,10 @@ function NewProduct() {
     return production.quantity > 0 && production.date;
   }
 
+  function onChangeDate(event) {
+    setProduction({ ...production, date: new Date(event).toISOString() })
+  }
+
   return (
     <React.Fragment>
       <Head>
@@ -73,7 +77,7 @@ function NewProduct() {
         <div className={styles.header}></div>
         <div style={{ display: 'flex', width: '100%', justifyContent: 'flex-start' }}>
           <CustomSelect value={production.productId} items={products} onChange={onChangeProduct} label="Produto" />
-          <CustomDatePicker style={{ marginLeft: '16px' }} value={production.date} onChange={console.log} label="Data" />
+          <CustomDatePicker style={{ marginLeft: '16px' }} value={production.date} onChange={onChangeDate} label="Data" />
           <TextInput
             style={{ width: '150px', marginLeft: '16px' }}
             label='Quantidade'

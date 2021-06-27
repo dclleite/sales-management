@@ -3,7 +3,7 @@ import styles from './styles.module.scss'
 import DateFnsUtils from '@date-io/date-fns';
 import {
   MuiPickersUtilsProvider,
-  KeyboardDatePicker,
+  DatePicker,
 } from '@material-ui/pickers';
 
 interface IDatePickerProps {
@@ -19,19 +19,16 @@ export function CustomDatePicker({ onChange, label, style = {}, value = '' }: ID
       <label className={styles.label} >{label}</label>
       <div className={styles.pickerContainer}>
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
-          <KeyboardDatePicker
+          <DatePicker
             disableToolbar
             variant="inline"
             format="MM/dd/yyyy"
             margin="normal"
             id="date-picker-inline"
-            value={new Date().toISOString()}
+            value={value}
             onChange={onChange}
             InputProps={{
               disableUnderline: true,
-            }}
-            KeyboardButtonProps={{
-              'aria-label': 'change date',
             }}
           />
         </MuiPickersUtilsProvider>
