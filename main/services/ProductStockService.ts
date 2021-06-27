@@ -8,7 +8,7 @@ import { uuid } from 'uuidv4';
 const knexConnection = createConnection()
 
 ipcMain.handle(ProductStockChannels.GET_BY_PRODUCT_ID, (event, productId: string) => {
-  return knexConnection<ProductStock>('productStock').where('id', productId).first()
+  return knexConnection<ProductStock>('productStock').where('productId', productId).first()
 });
 
 ipcMain.handle(ProductStockChannels.GET_ALL, (event) => {

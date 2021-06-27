@@ -15,8 +15,10 @@ ipcMain.handle(ProductChannels.GET_ALL, (event) => {
   return knexConnection<Product>('product')
 });
 
-ipcMain.handle(ProductChannels.INSERT_PRODUCT, (event, product: Product) => {
-  return knexConnection<Product>('product').insert({ ...product, id: uuid() })
+ipcMain.handle(ProductChannels.INSERT_PRODUCT, async (event, product: Product) => {
+  const id = uuid()
+  await knexConnection<Product>('product').insert({ ...product, id })
+  return [id]
 });
 
 ipcMain.handle(ProductChannels.UPDATE_PRODUCT, (event, product: Product) => {

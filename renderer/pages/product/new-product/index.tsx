@@ -10,6 +10,7 @@ import Modal from '../../../components/Modal'
 import Link from 'next/link'
 import { Product } from '../../../../db/model/Product'
 import { CustomSelect } from '../../../components/CustomSelect'
+import { saveProductStock } from '../../../services/ProductSotckService'
 
 function formatPrice(price: number) {
   return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(price)
@@ -44,7 +45,17 @@ function NewProduct() {
     if (isEditing) {
       updateProduct(product).then(() => setOpenModal(true))
     } else {
-      saveProduct(product).then(() => setOpenModal(true))
+      saveProduct(product)
+        .then(([id]) => {
+          console.log(id)
+          return saveProductStock({
+            id: '',
+            productId: id,
+            quantity: 0,
+            reservedQuantity: 0,
+          })
+        }
+        ).then(() => setOpenModal(true))
     }
   }
 

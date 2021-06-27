@@ -12,6 +12,7 @@ import { DailyProduction } from '../../../db/model/DailyProduction'
 import { CustomSelect } from '../../components/CustomSelect'
 import { getProductionById, saveProduction, updateProduction } from '../../services/DailyProductionService'
 import { CustomDatePicker } from '../../components/DatePicker'
+import { getProductsStock, getProductStockById, updateProductStock } from '../../services/ProductSotckService'
 
 const initialState = {
   id: '',
@@ -26,19 +27,41 @@ function NewProduct() {
   const [products, setProducts] = useState<Product[]>([])
   const [production, setProduction] = useState<DailyProduction>(initialState)
   const [openModal, setOpenModal] = useState(false)
+  const [originalQuantity, setOriginalQuantity] = useState(0)
 
   useEffect(() => {
     getProducts().then(setProducts)
     if (productionId) {
-      getProductionById(productionId as string).then(setProduction)
+      getProductionById(productionId as string).then((production) => {
+        setProduction(production);
+        setOriginalQuantity(production.quantity)
+      })
     }
   }, [productionId])
 
   async function addProduction() {
     if (editing) {
-      updateProduction(production).then(() => setOpenModal(true))
+      updateProduction(production)
+        .then(() => getProductStockById(production.productId))
+        .then(stock => {
+          const newStock = {
+            ...stock,
+            quantity: stock.quantity - originalQuantity + production.quantity
+          }
+          return updateProductStock(newStock)
+        }).then(() => setOpenModal(true))
     } else {
-      saveProduction(production).then(() => setOpenModal(true))
+      saveProduction(production)
+        .then(() => getProductStockById(production.productId))
+        .then(stock => {
+          const newStock = {
+            ...stock,
+            quantity: stock.quantity + production.quantity
+          }
+          console.log(newStock)
+          return updateProductStock(newStock)
+        })
+        .then(() => setOpenModal(true))
     }
   }
 
