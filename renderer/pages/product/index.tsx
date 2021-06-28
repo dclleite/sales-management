@@ -103,6 +103,7 @@ function Product() {
   async function addProduct(event: any) {
     console.log(event)
   }
+
   return (
     <React.Fragment>
       <Head>

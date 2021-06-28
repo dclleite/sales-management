@@ -8,10 +8,10 @@ export function getProductById(id: string): Promise<Product> {
   return window.api.productQueries.getById(id)
 }
 
-export function saveProduct(product: Product): Promise<number> {
+export function saveProduct(product: Product): Promise<string[]> {
   return window.api.productQueries.insert(product)
 }
 
-export function updateProduct(product: Product): Promise<number> {
+export function updateProduct(product: Product): Promise<string> {
   return window.api.productQueries.update(product)
 }

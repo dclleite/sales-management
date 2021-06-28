@@ -1,0 +1,31 @@
+.custmPickerContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.label {
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 500;
+
+  color: var(--gray-800);
+
+  margin-bottom: 8px;
+}
+
+.pickerContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 47px;
+  padding-left: 10px;
+
+  background-color: #fff;
+  background: var(--white);
+
+  border: 1px solid #e4e4e4;
+  box-sizing: border-box;
+  border-radius: 4px;
+
+  transition: border 0.4s;
+}

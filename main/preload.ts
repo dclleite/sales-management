@@ -37,6 +37,7 @@ contextBridge.exposeInMainWorld('api', {
     insert: (client: Client) => ipcRenderer.invoke(OrderChannels.INSERT_ORDER, client),
     getByClientId: (clientId: string) => ipcRenderer.invoke(OrderChannels.GET_BY_CLIENT_ID, clientId),
   },
+
   orderProductQueries: {
     getAll: () => ipcRenderer.invoke(OrderProductChannels.GET_ALL),
     getById: (id: string) => ipcRenderer.invoke(OrderProductChannels.GET_BY_ID, id),
@@ -44,7 +45,7 @@ contextBridge.exposeInMainWorld('api', {
     getByOrderId: (orderId: string) => ipcRenderer.invoke(OrderProductChannels.GET_BY_ORDER_ID, orderId),
   },
 
-  dailyProductionQueries: {
+  productionQueries: {
     getAll: () => ipcRenderer.invoke(DailyProductionChannels.GET_ALL),
     getById: (productId: string) => ipcRenderer.invoke(DailyProductionChannels.GET_BY_PRODUCT_ID, productId),
     insert: (dailyProduction: DailyProduction) => ipcRenderer.invoke(DailyProductionChannels.INSERT, dailyProduction),
