@@ -1,14 +1,13 @@
-import { ipcRenderer, contextBridge } from "electron";
-import { Client, ClientChannels } from "../db/model/Client";
-import { ProductPrice, ProductPriceChannels } from "../db/model/ProductPrice";
-import { Product, ProductChannels } from "../db/model/Product";
-import { OrderChannels } from "../db/model/Order";
-import { DailyProduction, DailyProductionChannels } from "../db/model/DailyProduction";
-import { ProductStockChannels } from "../db/model/ProductStock";
-import { OrderProduct, OrderProductChannels } from "../db/model/OrderProduct";
+import { ipcRenderer, contextBridge } from 'electron'
+import { Client, ClientChannels } from '../db/model/Client'
+import { ProductPrice, ProductPriceChannels } from '../db/model/ProductPrice'
+import { Product, ProductChannels } from '../db/model/Product'
+import { OrderChannels } from '../db/model/Order'
+import { DailyProduction, DailyProductionChannels } from '../db/model/DailyProduction'
+import { ProductStockChannels } from '../db/model/ProductStock'
+import { OrderProduct, OrderProductChannels } from '../db/model/OrderProduct'
 
-
-contextBridge.exposeInMainWorld("api", {
+contextBridge.exposeInMainWorld('api', {
   clientQueries: {
     getById: (id: string) => ipcRenderer.invoke(ClientChannels.GET_BY_ID, id),
     getAll: (searchName?: string) => ipcRenderer.invoke(ClientChannels.GET_ALL, searchName),
@@ -26,7 +25,8 @@ contextBridge.exposeInMainWorld("api", {
   productPriceQueries: {
     getAll: () => ipcRenderer.invoke(ProductPriceChannels.GET_ALL),
     getByClientId: (clientId: string) => ipcRenderer.invoke(ProductPriceChannels.GET_BY_CLIENT_ID, clientId),
-    getByProductId: (productID: string) => ipcRenderer.invoke(ProductPriceChannels.GET_BY_PRODUCT_ID, productID),
+    getByProductId: (productID: string, searchName?: string) =>
+      ipcRenderer.invoke(ProductPriceChannels.GET_BY_PRODUCT_ID, productID, searchName),
     insert: (productPrice: ProductPrice) => ipcRenderer.invoke(ProductPriceChannels.INSERT_PRODUCT_PRICE, productPrice),
     update: (productPrice: ProductPrice) => ipcRenderer.invoke(ProductPriceChannels.UPDATE_PRODUCT_PRICE, productPrice),
   },
@@ -56,5 +56,5 @@ contextBridge.exposeInMainWorld("api", {
     getById: (productId: string) => ipcRenderer.invoke(ProductStockChannels.GET_BY_PRODUCT_ID, productId),
     insert: (productStock: DailyProduction) => ipcRenderer.invoke(ProductStockChannels.INSERT, productStock),
     update: (productStock: DailyProduction) => ipcRenderer.invoke(ProductStockChannels.UPDATE, productStock),
-  }
-});
+  },
+})

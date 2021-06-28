@@ -19,7 +19,6 @@ function formatCustomersToTable(clients: ClientModel[], render: (client: ClientM
 }
 
 function getClientsByPage(page: number, searchName?: string): Promise<ClientsSearch> {
-
   return getClients(searchName ? `%${searchName}%` : '').then((clients) => {
     const startIndex = (page - 1) * CLIENTS_PER_PAGE
     const pageClients = clients.slice(startIndex, startIndex + CLIENTS_PER_PAGE)
@@ -27,7 +26,7 @@ function getClientsByPage(page: number, searchName?: string): Promise<ClientsSea
     return {
       clients: pageClients,
       totalPages: Math.ceil(clients.length / CLIENTS_PER_PAGE),
-      searchedName: searchName
+      searchedName: searchName,
     }
   })
 }
@@ -60,7 +59,7 @@ function Client() {
   }, [])
 
   function nextPage() {
-    if(lastPage > 1) {
+    if (lastPage > 1) {
       const newPage = page + 1
       getClientsByPage(newPage, searchedName).then((clientsSearch) => {
         if (clientsSearch.clients.length > 0) {
@@ -70,7 +69,6 @@ function Client() {
         }
       })
     }
-   
   }
 
   function previousPage() {
@@ -124,17 +122,20 @@ function Client() {
       </Head>
       <div className={styles.clientContainer}>
         <div className={styles.header}>
-          <SearchInput value={searchName} onChange={setSearchName} onClick={() => {
-            getClientsByPage(1, searchName).then((clientsSearch) => {
-              if (clientsSearch.clients.length > 0) {
-                setClients(clientsSearch.clients)
-                setPage(1)
-                setLastPage(clientsSearch.totalPages)
-                setSearchedName(clientsSearch.searchedName)
-              }
-            })
-
-          }} />
+          <SearchInput
+            value={searchName}
+            onChange={setSearchName}
+            onClick={() => {
+              getClientsByPage(1, searchName).then((clientsSearch) => {
+                if (clientsSearch.clients.length > 0) {
+                  setClients(clientsSearch.clients)
+                  setPage(1)
+                  setLastPage(clientsSearch.totalPages)
+                  setSearchedName(clientsSearch.searchedName)
+                }
+              })
+            }}
+          />
           <Link href='/client/new-client'>
             <Button>Adicionar novo cliente</Button>
           </Link>

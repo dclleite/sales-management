@@ -11,7 +11,7 @@ export interface TextInputProps {
   label?: string
   maxLength?: number
   feedback?: Feedback
-  onChange: (value: string, inputName?: string) => void
+  onChange?: (value: string, inputName?: string) => void
   onBlur?: (value: string, isInputValid: boolean) => void
   onFocus?: () => void
   validation?: (value: string) => boolean

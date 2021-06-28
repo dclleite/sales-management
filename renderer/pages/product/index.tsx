@@ -13,7 +13,18 @@ import { getProducts, saveProduct } from '../../services/ProductService'
 import Link from 'next/link'
 function renderActTable(productId) {
   return (
-    <div style={{ display: 'flex', padding: 'auto' }}>
+    <div style={{ display: 'flex', gap: 30, alignItems: 'center' }}>
+      <Link
+        href={{
+          pathname: '/product/product-price',
+          query: {
+            productId,
+            editing: true,
+          },
+        }}
+      >
+        <a>Ver clietes</a>
+      </Link>
 
       <Link
         href={{

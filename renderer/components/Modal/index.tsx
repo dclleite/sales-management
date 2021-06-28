@@ -12,7 +12,7 @@ const useStyles = makeStyles({
   },
 })
 
-function Modal({ children, ...rest }: DialogProps) {
+export function Modal({ children, ...rest }: DialogProps) {
   const { paper } = useStyles()
   return (
     <Dialog classes={{ paper }} {...rest}>
@@ -20,5 +20,3 @@ function Modal({ children, ...rest }: DialogProps) {
     </Dialog>
   )
 }
-
-export default Modal

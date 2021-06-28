@@ -8,12 +8,15 @@ interface TableProps extends React.TableHTMLAttributes<HTMLTableElement> {
 }
 
 export function Table({ headers, bodies, ...rest }: TableProps) {
+  const cellWidth = 100 / headers.length
   return (
     <table className={styles.tableContainer} {...rest}>
       <thead>
         <tr className={styles.teste}>
           {headers.map((value, index) => (
-            <th key={`${value}${index}`}>{value}</th>
+            <th style={{ width: `${cellWidth}%` }} key={`${value}${index}`}>
+              {value}
+            </th>
           ))}
         </tr>
       </thead>
@@ -21,7 +24,9 @@ export function Table({ headers, bodies, ...rest }: TableProps) {
         {bodies.map((trValue, index) => (
           <tr key={`trKey${index}`}>
             {trValue.map((tdValue, index) => (
-              <td key={`${tdValue}${index}`}>{tdValue}</td>
+              <td style={{ width: `${cellWidth}%` }} key={`${tdValue}${index}`}>
+                {tdValue}
+              </td>
             ))}
           </tr>
         ))}
