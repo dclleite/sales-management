@@ -11,6 +11,7 @@ contextBridge.exposeInMainWorld('api', {
   clientQueries: {
     getById: (id: string) => ipcRenderer.invoke(ClientChannels.GET_BY_ID, id),
     getAll: (searchName?: string) => ipcRenderer.invoke(ClientChannels.GET_ALL, searchName),
+    getAvailableClients: (productId: string) => ipcRenderer.invoke(ClientChannels.GET_AVAILABLE_CLIENTS, productId),
     insert: (client: Client) => ipcRenderer.invoke(ClientChannels.INSERT_CLIENT, client),
     update: (client: Client) => ipcRenderer.invoke(ClientChannels.UPDATE_CLIENT, client),
   },

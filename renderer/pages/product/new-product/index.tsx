@@ -54,8 +54,8 @@ function NewProduct() {
             quantity: 0,
             reservedQuantity: 0,
           })
-        }
-        ).then(() => setOpenModal(true))
+        })
+        .then(() => setOpenModal(true))
     }
   }
 
@@ -78,7 +78,7 @@ function NewProduct() {
   }
 
   function validateForm() {
-    return product.price > 0 && product.name && product.unit
+    return product.price > 0 && Boolean(product.name) && Boolean(product.unit)
   }
 
   return (
@@ -91,7 +91,13 @@ function NewProduct() {
         <div style={{ display: 'flex', width: '100%', justifyContent: 'flex-start' }}>
           <TextInput label='Produto' value={product.name} onChange={(name) => setProduct({ ...product, name })} />
           {/* <TextInput style={{ width: '100px', marginLeft: '16px' }} label='Unidade' value={product.unit} onChange={(unit) => setProduct({ ...product, unit })} /> */}
-          <CustomSelect style={{ marginLeft: '16px' }} value={product.unit} items={Object.values(UNITS)} onChange={onChangeUnit} label="Unidade" />
+          <CustomSelect
+            style={{ marginLeft: '16px' }}
+            value={product.unit}
+            items={Object.values(UNITS)}
+            onChange={onChangeUnit}
+            label='Unidade'
+          />
           <TextInput
             style={{ width: '150px', marginLeft: '16px' }}
             label='Preço'
@@ -100,7 +106,9 @@ function NewProduct() {
           />
         </div>
         <div style={{ display: 'flex', width: '100%', justifyContent: 'flex-start' }}>
-          <Button disabled={!validateForm()} onClick={addProduct}>Cadastrar</Button>
+          <Button disabled={!validateForm()} onClick={addProduct}>
+            Cadastrar
+          </Button>
           <Link href='/product'>
             <a className={styles.cancel}>{'Cancelar'}</a>
           </Link>

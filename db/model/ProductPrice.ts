@@ -3,8 +3,8 @@ import { Client } from './Client'
 
 export type ProductPrice = {
   id?: string
-  clienteId: string
-  produtoId: string
+  clientId: string
+  productId: string
   price: number
 }
 

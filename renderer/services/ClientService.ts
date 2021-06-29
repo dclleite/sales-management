@@ -8,6 +8,10 @@ export function getClients(searchName?: string): Promise<Client[]> {
   return window.api.clientQueries.getAll(searchName)
 }
 
+export function getAvailableClients(productId?: string): Promise<Client[]> {
+  return window.api.clientQueries.getAvailableClients(productId)
+}
+
 export function saveClient(client: Client): Promise<string[]> {
   return window.api.clientQueries.insert(client)
 }

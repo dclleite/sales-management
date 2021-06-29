@@ -10,6 +10,7 @@ declare interface Window {
     clientQueries: {
       getById: (id: string) => Promise<import('../db/model/Client').Client>
       getAll: (serachName?: string) => Promise<import('../db/model/Client').Client[]>
+      getAvailableClients: (productId: string) => Promise<import('../db/model/Client').Client[]>
       insert: (client: import('../db/model/Client').Client) => Promise<string[]>
       update: (client: import('../db/model/Client').Client) => Promise<string>
     }
@@ -33,6 +34,8 @@ declare interface Window {
         productId: string,
         searchName?: string
       ) => Promise<import('../db/model/ProductPrice').FormattedProductPrice[]>
+      insert: (price: import('../db/model/ProductPrice').ProductPrice) => Promise<string[]>
+      update: (price: import('../db/model/ProductPrice').ProductPrice) => Promise<string>
     }
   }
 }

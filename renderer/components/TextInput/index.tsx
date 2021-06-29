@@ -41,17 +41,18 @@ export function TextInput({
   style = {},
 }: TextInputProps) {
   const ref = useRef<HTMLInputElement>(null)
-  const [isInputValid, setIsInputValid] = useState(true)
+  const [isInputValid, setIsInputValid] = useState<undefined | 'valid' | 'invalid'>(undefined)
   const [isFocus, setIsFocus] = useState(false)
 
   const [successfulFeedback, setSuccessfulFeedback] = useState(false)
   const [failureFeedback, setFailureFeedback] = useState(false)
 
   useEffect(() => {
-    if (value.length > 0 && !isFocus && validation && isInputValid) {
+    console.log(value)
+    if (value.length > 0 && !isFocus && validation && isInputValid === 'valid') {
       setSuccessfulFeedback(true)
       setFailureFeedback(false)
-    } else if (!isInputValid && (validation || required)) {
+    } else if (isInputValid === 'invalid' && (validation || required)) {
       setFailureFeedback(true)
       setSuccessfulFeedback(false)
     } else {
@@ -79,7 +80,7 @@ export function TextInput({
 
   function renderFeedback() {
     if (feedback) {
-      if (!isInputValid && (validation || required)) {
+      if (isInputValid === 'invalid' && (validation || required)) {
         return (
           <span className={`${styles.feedback} ${styles.errorFeedback}`}>
             {feedback.errorMessage || 'Campo inválido'}
@@ -124,13 +125,13 @@ export function TextInput({
             if (newIsInputValid && value.length > 0 && validation) {
               newIsInputValid = validation(value)
             }
-            setIsInputValid(newIsInputValid)
+            setIsInputValid(newIsInputValid ? 'valid' : 'invalid')
             setIsFocus(false)
             onBlur && onBlur(value, newIsInputValid)
           }}
           onFocus={() => {
             setIsFocus(true)
-            setIsInputValid(true)
+            setIsInputValid('valid')
             onFocus && onFocus()
           }}
           disabled={disabled}
