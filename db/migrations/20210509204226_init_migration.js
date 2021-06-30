@@ -57,7 +57,8 @@ exports.up = function (knex) {
       table.uuid('orderId').notNullable()
       table.uuid('productId').notNullable()
       table.integer('quantity').notNullable()
-      table.decimal('productPrice').notNullable()
+      table.string('unit').notNullable()
+      table.decimal('price').notNullable()
 
       table.foreign('orderId').references('id').inTable('order')
       table.foreign('productId').references('id').inTable('product')
