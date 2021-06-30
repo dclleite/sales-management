@@ -26,7 +26,7 @@ ipcMain.handle(DailyProductionChannels.GET_ALL, (event) => {
 });
 
 ipcMain.handle(DailyProductionChannels.INSERT, (event, dailyProduction: DailyProduction) => {
-  return knexConnection<DailyProduction>('dailyProduction').insert({ ...dailyProduction, id: uuid() })
+  return knexConnection<DailyProduction>('dailyProduction').insert({ ...dailyProduction })
 });
 
 ipcMain.handle(DailyProductionChannels.UPDATE, (event, dailyProduction: DailyProduction) => {

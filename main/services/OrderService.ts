@@ -38,5 +38,5 @@ ipcMain.handle(OrderChannels.GET_ALL, async (event, searchName?: string) => {
 })
 
 ipcMain.handle(OrderChannels.INSERT_ORDER, (event, order: Order) => {
-  return knexConnection<Order>('order').insert({ ...order, id: uuid() })
+  return knexConnection<Order>('order').insert({ ...order })
 })

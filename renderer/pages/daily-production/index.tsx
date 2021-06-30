@@ -14,6 +14,83 @@ import Link from 'next/link'
 import { getProductions } from '../../services/DailyProductionService'
 import FeedbackModal from '../../components/FeedbackModal'
 import ModalNota from '../../components/ModalNota'
+import backup from '../../services/backup.json'
+import { Client } from '../../../db/model/Client'
+import { Product } from '../../../db/model/Product'
+import { ProductPrice } from '../../../db/model/ProductPrice'
+import { Order } from '../../../db/model/Order'
+import { OrderProduct } from '../../../db/model/OrderProduct'
+import { saveClient } from '../../services/ClientService'
+import { insert } from '../../services/ProductPriceService'
+
+
+
+const mapTables = async () => {
+  const newClients = backup.clientes.map((old): Client => ({
+    name: old.nome,
+    street: old.endereco,
+    phone: old.telefone,
+    cpfCnpj: old.cpfCnpj.replace('-', '').replace('/', '').replace('.', ''),
+    id: old.id.toString()
+  }))
+
+  console.log('clients')
+  await Promise.all(newClients.map(saveClient))
+
+  const newProducts = backup.produtos.map((old): Product => ({
+    name: old.nome,
+    price: old.valor,
+    unit: old.unidade,
+    id: old.id.toString()
+  }))
+
+  console.log('products')
+  await Promise.all(newProducts.map(saveProduct))
+
+  const newPrices = backup.precosProduto.map((old): ProductPrice => ({
+    price: old.valor,
+    clientId: old.clienteId.toString(),
+    productId: old.produtoId.toString(),
+    id: old.id.toString()
+  }))
+
+  console.log('productPrice')
+  await Promise.all(newPrices.map(insert))
+
+  const newOrders: Order[] = [];
+  const newProductOrders: OrderProduct[] = []
+
+  backup.vendas.forEach((old) => {
+    let total = 0
+    old.itemsVenda.forEach(item => {
+      total += item.valor
+
+      const { unit, name } = newProducts.find(p => p.id === item.produtoId.toString())
+      newProductOrders.push({
+        orderId: old.id.toString(),
+        productId: item.produtoId.toString(),
+        quantity: Number.parseInt(item.quantity),
+        price: item.valor,
+        unit,
+        name
+      })
+    })
+
+    newOrders.push({
+      clientId: old.clienteId.toString(),
+      orderDate: old.dataEntrega,
+      deliveryDate: old.dataVenda,
+      totalPrice: total,
+      completedOrder: true
+    })
+
+    // console.log('productPrice')
+    // await Promise.all(newOrders.map(saveOrder))
+
+    // console.log('productPrice')
+    // await Promise.all(newProductOrders.map(saveOrderProduct))
+  })
+}
 
 function renderNota() {
   return <ModalNota open={false} close={console.log} />
@@ -65,7 +142,7 @@ async function getProductionByPage(page: number, set: Function): Promise<Product
   }
 }
 
-function Product() {
+function DailyProduction() {
   const [products, setProducts] = useState<(string | JSX.Element)[][]>([])
   const [page, setPage] = useState(1)
   const [lastPage, setLastPage] = useState(1)
@@ -78,6 +155,8 @@ function Product() {
   }, [])
 
   function nextPage() {
+    console.log('asdasdasdas')
+    mapTables()
     getProductionByPage(page + 1, setProducts).then((newProducts) => {
       if (newProducts.products.length > 0) {
         setPage(page + 1)
@@ -117,4 +196,4 @@ function Product() {
   )
 }
 
-export default Product
+export default DailyProduction

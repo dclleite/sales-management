@@ -16,7 +16,7 @@ ipcMain.handle(ProductStockChannels.GET_ALL, (event) => {
 });
 
 ipcMain.handle(ProductStockChannels.INSERT, (event, productStock: ProductStock) => {
-  return knexConnection<ProductStock>('productStock').insert({ ...productStock, id: uuid() })
+  return knexConnection<ProductStock>('productStock').insert({ ...productStock })
 });
 
 ipcMain.handle(ProductStockChannels.UPDATE, (event, productStock: ProductStock) => {

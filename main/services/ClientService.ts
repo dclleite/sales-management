@@ -23,7 +23,7 @@ ipcMain.handle(ClientChannels.GET_AVAILABLE_CLIENTS, (event, productId: string) 
 })
 
 ipcMain.handle(ClientChannels.INSERT_CLIENT, (event, client: Client) => {
-  return knexConnection<Client>('client').insert({ ...client, id: uuid() })
+  return knexConnection<Client>('client').insert({ ...client })
 })
 
 ipcMain.handle(ClientChannels.UPDATE_CLIENT, (event, client: Client) => {

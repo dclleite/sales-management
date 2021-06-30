@@ -17,7 +17,7 @@ ipcMain.handle(ProductChannels.GET_ALL, (event) => {
 
 ipcMain.handle(ProductChannels.INSERT_PRODUCT, async (event, product: Product) => {
   const id = uuid()
-  await knexConnection<Product>('product').insert({ ...product, id })
+  await knexConnection<Product>('product').insert({ ...product })
   return [id]
 });
 

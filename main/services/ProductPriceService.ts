@@ -52,7 +52,7 @@ ipcMain.handle(ProductPriceChannels.GET_ALL, (event) => {
 })
 
 ipcMain.handle(ProductPriceChannels.INSERT_PRODUCT_PRICE, (event, productPrice: ProductPrice) => {
-  return knexConnection<ProductPrice>('productPrice').insert({ ...productPrice, id: uuid() })
+  return knexConnection<ProductPrice>('productPrice').insert({ ...productPrice })
 })
 
 ipcMain.handle(ProductPriceChannels.UPDATE_PRODUCT_PRICE, (event, productPrice: ProductPrice) => {
