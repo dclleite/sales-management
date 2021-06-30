@@ -3,6 +3,7 @@ export type OrderProduct = {
   orderId: string
   productId: string
   quantity: number
+  productPrice: number
 }
 
 export enum OrderProductChannels {

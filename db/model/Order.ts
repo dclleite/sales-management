@@ -1,8 +1,18 @@
+import { Client } from './Client'
 export type Order = {
   id?: string
   clientId: string
   orderDate: string
   deliveryDate: string
+  totalPrice: number
+}
+
+export type formattedOrder = {
+  id?: string
+  client: Client
+  orderDate: string
+  deliveryDate: string
+  totalPrice: number
 }
 
 export enum OrderChannels {
