@@ -32,7 +32,7 @@ export function Menu() {
             Produtos
           </button>
         </Link>
-        <Link href='/client'>
+        <Link href='/order'>
           <button>
             <SalesIcon />
             Vendas

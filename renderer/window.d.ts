@@ -37,5 +37,9 @@ declare interface Window {
       insert: (price: import('../db/model/ProductPrice').ProductPrice) => Promise<string[]>
       update: (price: import('../db/model/ProductPrice').ProductPrice) => Promise<string>
     }
+
+    orderQueries: {
+      getAll: (searchName?: string) => Promise<import('../db/model/Order').formattedOrder[]>
+    }
   }
 }
