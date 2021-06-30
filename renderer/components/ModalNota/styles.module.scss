@@ -1,6 +1,6 @@
 .modal {
   max-width: 900px !important;
-  height: 400px;
+  height: fit-content;
   padding: 24px;
   font-size: 14px;
 }
@@ -23,10 +23,23 @@
   width: 100%;
   border: 1px solid black;
   border-collapse: collapse;
+  page-break-inside: auto;
+  tbody {
+    tr {
+      page-break-inside: avoid;
+      page-break-after: auto;
+    }
+  }
+  thead {
+    tr {
+      page-break-inside: avoid;
+      page-break-after: auto;
+    }
+  }
   td {
     border: 1px solid black;
+    min-width: 120px;
     text-align: center;
-    // width: 50px;
   }
   th {
     border: 1px solid black;

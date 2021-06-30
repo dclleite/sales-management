@@ -19,11 +19,8 @@ import ModalNota from '../../components/ModalNota'
 
 function renderNota() {
   return <ModalNota
-    title={'Produto cadastrado com sucesso!'}
-    image={<img style={{ marginBottom: 90 }} src='/images/product-successfully-registered.svg' />}
-    buttonText='Ok'
     open={true}
-    action={console.log}
+    close={console.log}
   />
 }
 
