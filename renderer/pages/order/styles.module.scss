@@ -1,0 +1,147 @@
+.orderContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  align-items: center;
+  justify-content: center;
+
+  .header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+  }
+
+  .tableContainer {
+    width: 100%;
+  }
+}
+
+.newOrderContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  .title {
+    padding: 10px 0;
+    border-top: solid 1px #ebeff2;
+    border-bottom: solid 1px #ebeff2;
+    & h2 {
+      color: var(--blue-300);
+
+      font-family: Poppins;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 24px;
+      line-height: 36px;
+      /* identical to box height */
+
+      letter-spacing: 0.01em;
+    }
+  }
+
+  .textInputContainer {
+    display: flex;
+    gap: 20px;
+  }
+
+  .addProduct {
+    font-family: Poppins;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 24px;
+    /* identical to box height */
+
+    letter-spacing: 0.01em;
+    text-decoration-line: underline;
+    color: var(--gray-800);
+  }
+
+  .subtotal {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+
+    align-items: center;
+    justify-content: flex-end;
+
+    label {
+      font-family: Poppins;
+      font-style: normal;
+      font-weight: bold;
+      font-size: 20px;
+      line-height: 30px;
+      /* identical to box height */
+
+      letter-spacing: 0.01em;
+      color: var(--gray-800);
+    }
+
+    p {
+      font-family: Poppins;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 20px;
+      line-height: 30px;
+      /* identical to box height */
+
+      letter-spacing: 0.01em;
+      color: var(--gray-800);
+    }
+  }
+
+  .discountContainer {
+    display: flex;
+    gap: 18px;
+    justify-content: space-between;
+    align-items: center;
+
+    .spacing {
+      width: 100%;
+      height: 1px;
+      transform: matrix(1, 0, 0, -1, 0, 0);
+      background: #d9dadb;
+      box-sizing: border-box;
+      border-radius: 60px;
+    }
+
+    .total {
+      display: flex;
+      flex-direction: row;
+      gap: 20px;
+
+      align-items: center;
+      justify-content: flex-end;
+
+      label {
+        font-family: Poppins;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 20px;
+        line-height: 30px;
+        /* identical to box height */
+
+        letter-spacing: 0.01em;
+
+        color: #1ea9f3;
+      }
+
+      p {
+        white-space: nowrap;
+        font-family: Poppins;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 20px;
+        line-height: 30px;
+        /* identical to box height */
+
+        letter-spacing: 0.01em;
+
+        /* table_black */
+
+        color: #323c47;
+      }
+    }
+  }
+}

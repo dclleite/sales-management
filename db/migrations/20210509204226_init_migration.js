@@ -56,6 +56,7 @@ exports.up = function (knex) {
       table.uuid('id').primary()
       table.uuid('orderId').notNullable()
       table.uuid('productId').notNullable()
+      table.string('name').notNullable()
       table.integer('quantity').notNullable()
       table.string('unit').notNullable()
       table.decimal('price').notNullable()

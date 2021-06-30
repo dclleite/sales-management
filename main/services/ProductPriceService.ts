@@ -32,18 +32,11 @@ ipcMain.handle(ProductPriceChannels.GET_BY_PRODUCT_ID, async (event, productId: 
 })
 
 ipcMain.handle(ProductPriceChannels.GET_BY_CLIENT_ID, async (event, clientId: string) => {
-  const teste = knexConnection<ProductPrice>('productPrice')
+  return knexConnection<ProductPrice>('productPrice')
     .where('clientId', clientId)
-    .join<Client>('clients', 'clientId', '=', 'clients.id')
-    .join<Product>('products', 'productId', '=', 'products.id')
-    .select({
-      clientName: 'client.name',
-      productName: 'product.name',
-      unit: 'product.unit',
-      price: 'productPrice.price',
-    })
-
-  return teste
+    .join<Client>('client', 'clientId', '=', 'client.id')
+    .join<Product>('product', 'productId', '=', 'product.id')
+    .select('productPrice.*')
 })
 
 ipcMain.handle(ProductPriceChannels.GET_ALL, (event) => {

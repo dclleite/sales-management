@@ -15,16 +15,9 @@ import { getProductions } from '../../services/DailyProductionService'
 import FeedbackModal from '../../components/FeedbackModal'
 import ModalNota from '../../components/ModalNota'
 
-
-
 function renderNota() {
-  return <ModalNota
-    open={true}
-    close={console.log}
-  />
+  return <ModalNota open={false} close={console.log} />
 }
-
-
 
 function renderActTable(productionId) {
   return (

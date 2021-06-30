@@ -34,6 +34,7 @@ declare interface Window {
         productId: string,
         searchName?: string
       ) => Promise<import('../db/model/ProductPrice').FormattedProductPrice[]>
+      getByClientId: (clientId: string) => Promise<import('../db/model/ProductPrice').ProductPrice[]>
       insert: (price: import('../db/model/ProductPrice').ProductPrice) => Promise<string[]>
       update: (price: import('../db/model/ProductPrice').ProductPrice) => Promise<string>
     }

@@ -2,6 +2,7 @@ export type OrderProduct = {
   id?: string
   orderId: string
   productId: string
+  name: string
   quantity: number
   unit: string
   price: number

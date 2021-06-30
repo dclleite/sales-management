@@ -22,12 +22,13 @@ ipcMain.handle(OrderChannels.GET_ALL, async (event, searchName?: string) => {
 
   const orderListLike = await (searchName ? orderList.where('name', 'like', searchName) : orderList)
 
-  return orderListLike.map(({ orderId, orderDate, deliveryDate, totalPrice, clientId, ...rest }) => {
+  return orderListLike.map(({ orderId, orderDate, deliveryDate, totalPrice, completedOrder, clientId, ...rest }) => {
     return {
       id: orderId,
       orderDate,
       deliveryDate,
       totalPrice,
+      completedOrder,
       client: {
         id: clientId,
         ...rest,
