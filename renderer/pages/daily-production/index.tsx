@@ -12,6 +12,20 @@ import styles from './styles.module.scss'
 import { getProducts, saveProduct } from '../../services/ProductService'
 import Link from 'next/link'
 import { getProductions } from '../../services/DailyProductionService'
+import FeedbackModal from '../../components/FeedbackModal'
+import ModalNota from '../../components/ModalNota'
+
+
+
+function renderNota() {
+  return <ModalNota
+    open={true}
+    close={console.log}
+  />
+}
+
+
+
 function renderActTable(productionId) {
   return (
     <div style={{ display: 'flex', gap: 30, alignItems: 'center' }}>
@@ -105,6 +119,7 @@ function Product() {
           <Table headers={headers} bodies={products} />
         </div>
       </div>
+      {renderNota()}
     </React.Fragment>
   )
 }
