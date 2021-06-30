@@ -16,7 +16,7 @@ declare interface Window {
     }
 
     productionQueries: {
-      getAll: () => Promise<import('../db/model/DailyProduction').DailyProduction[]>
+      getAll: () => Promise<import('../db/model/DailyProduction').ProductProduction[]>
       getById: (id: string) => Promise<import('../db/model/DailyProduction').DailyProduction>
       insert: (dailyProduction: import('../db/model/DailyProduction').DailyProduction) => Promise<string[]>
       update: (dailyProduction: import('../db/model/DailyProduction').DailyProduction) => Promise<string>

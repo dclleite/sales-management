@@ -1,6 +1,6 @@
-import { DailyProduction } from "../../db/model/DailyProduction";
+import { DailyProduction, ProductProduction } from "../../db/model/DailyProduction";
 
-export function getProductions(): Promise<DailyProduction[]> {
+export function getProductions(): Promise<ProductProduction[]> {
   return window.api.productionQueries.getAll()
 }
 

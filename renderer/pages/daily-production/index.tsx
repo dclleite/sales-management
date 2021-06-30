@@ -1,94 +1,91 @@
 import React, { useEffect, useState } from 'react'
-import { useRouter } from 'next/router'
 import Head from 'next/head'
 import { Button } from '../../components/Button'
-import FeedbackModal from '../../components/FeedbackModal'
+import { SearchInput } from '../../components/SearchInput'
 import { TextInput } from '../../components/TextInput'
-import styles from './styles.module.scss'
-import { getProducts } from '../../services/ProductService'
-import Link from 'next/link'
-import { Product } from '../../../db/model/Product'
-import { DailyProduction } from '../../../db/model/DailyProduction'
-import { CustomSelect } from '../../components/CustomSelect'
-import { getProductionById, saveProduction, updateProduction } from '../../services/DailyProductionService'
-import { CustomDatePicker } from '../../components/DatePicker'
-import { getProductsStock, getProductStockById, updateProductStock } from '../../services/ProductSotckService'
+import { Table } from '../../components/Table'
+import { PageControl } from '../../components/PageControl'
 
-const initialState = {
-  id: '',
-  productId: '',
-  date: new Date().toISOString(),
-  quantity: 0
+import { PencilIcon } from '../../components/Icons'
+
+import styles from './styles.module.scss'
+import { getProducts, saveProduct } from '../../services/ProductService'
+import Link from 'next/link'
+import { getProductions } from '../../services/DailyProductionService'
+function renderActTable(productionId) {
+  return (
+    <div style={{ display: 'flex', gap: 30, alignItems: 'center' }}>
+      <Link
+        href={{
+          pathname: '/daily-production/new',
+          query: {
+            productionId,
+            editing: true,
+          },
+        }}
+      >
+        <button>
+          <PencilIcon />
+        </button>
+      </Link>
+    </div>
+  )
 }
 
-function NewProduct() {
-  const router = useRouter()
-  const { productionId, editing } = router.query
-  const [products, setProducts] = useState<Product[]>([])
-  const [production, setProduction] = useState<DailyProduction>(initialState)
-  const [openModal, setOpenModal] = useState(false)
-  const [originalQuantity, setOriginalQuantity] = useState(0)
+const PRODUCTS_PER_PAGE = 10
+
+interface ProductsSearch {
+  products: (string | JSX.Element)[][]
+  totalPages: number
+}
+
+async function getProductionByPage(page: number, set: Function): Promise<ProductsSearch> {
+  const products = (await getProductions()).sort((p1, p2) => new Date(p1.date).getTime() - new Date(p2.date).getTime())
+  const startIndex = (page - 1) * PRODUCTS_PER_PAGE
+  const pageProducts = products.slice(startIndex, startIndex + PRODUCTS_PER_PAGE)
+  const newProducts = pageProducts.map((production) => [
+    production.productName,
+    new Date(production.date).toLocaleDateString(),
+    production.quantity.toString(),
+    renderActTable(production.id),
+  ])
+  if (newProducts.length > 0) {
+    set(newProducts)
+  }
+  return {
+    products: newProducts,
+    totalPages: Math.ceil(products.length / PRODUCTS_PER_PAGE),
+  }
+}
+
+function Product() {
+  const [products, setProducts] = useState<(string | JSX.Element)[][]>([])
+  const [page, setPage] = useState(1)
+  const [lastPage, setLastPage] = useState(1)
+  const headers = ['Produto', 'Data', 'Quantidade', 'Ações']
 
   useEffect(() => {
-    getProducts().then(setProducts)
-    if (productionId) {
-      getProductionById(productionId as string).then((production) => {
-        setProduction(production);
-        setOriginalQuantity(production.quantity)
-      })
+    if (products.length === 0) {
+      getProductionByPage(page, setProducts).then((search) => setLastPage(search.totalPages))
     }
-  }, [productionId])
+  }, [])
 
-  async function addProduction() {
-    if (editing) {
-      updateProduction(production)
-        .then(() => getProductStockById(production.productId))
-        .then(stock => {
-          const newStock = {
-            ...stock,
-            quantity: stock.quantity - originalQuantity + production.quantity
-          }
-          return updateProductStock(newStock)
-        }).then(() => setOpenModal(true))
-    } else {
-      saveProduction(production)
-        .then(() => getProductStockById(production.productId))
-        .then(stock => {
-          const newStock = {
-            ...stock,
-            quantity: stock.quantity + production.quantity
-          }
-          console.log(newStock)
-          return updateProductStock(newStock)
-        })
-        .then(() => setOpenModal(true))
+  function nextPage() {
+    getProductionByPage(page + 1, setProducts).then((newProducts) => {
+      if (newProducts.products.length > 0) {
+        setPage(page + 1)
+      }
+    })
+  }
+
+  function previousPage() {
+    if (page > 1) {
+      getProductionByPage(page - 1, setProducts).then(() => setPage(page - 1))
     }
   }
 
-  function quantityValidation(value: string) {
-    const val = value.replace(/[^0-9]+/g, '')
-    if (val.length === 0) {
-      setProduction({ ...production, quantity: 0 })
-    } else {
-      setProduction({ ...production, quantity: Number.parseInt(val) })
-    }
-  }
-
-  function redirect() {
-    setOpenModal(false)
-    setProduction(initialState)
-  }
-
-  function onChangeProduct(event: any) {
-    setProduction({ ...production, productId: event.target.value })
-  }
-
-  function validateProduction() {
-    return production.quantity > 0 && production.date;
-  }
-
-  function onChangeDate(event) {
-    setProduction({ ...production, date: new Date(event).toISOString() })
+  async function addProduct(event: any) {
+    console.log(event)
   }
 
   return (
@@ -97,33 +94,19 @@ function NewProduct() {
         <title>Products - Neoplast</title>
       </Head>
       <div className={styles.productContainer}>
-        <div className={styles.header}></div>
-        <div style={{ display: 'flex', width: '100%', justifyContent: 'flex-start' }}>
-          <CustomSelect value={production.productId} items={products} onChange={onChangeProduct} label="Produto" />
-          <CustomDatePicker style={{ marginLeft: '16px' }} value={production.date} onChange={onChangeDate} label="Data" />
-          <TextInput
-            style={{ width: '150px', marginLeft: '16px' }}
-            label='Quantidade'
-            value={production.quantity.toString()}
-            onChange={quantityValidation}
-          />
-        </div>
-        <div style={{ display: 'flex', width: '100%', justifyContent: 'flex-start' }}>
-          <Button disabled={!validateProduction()} onClick={addProduction}>Cadastrar</Button>
-          <Link href='/product'>
-            <a className={styles.cancel}>{'Cancelar'}</a>
+        <div className={styles.header}>
+          <SearchInput value='product' onChange={(value) => console.log(value)} />
+          <Link href='/daily-production/new'>
+            <Button>Adicionar nova produção</Button>
           </Link>
         </div>
+        <div className={styles.tableContainer}>
+          <PageControl back={previousPage} next={nextPage} currentPage={page} totalPages={lastPage} />
+          <Table headers={headers} bodies={products} />
+        </div>
       </div>
-      <FeedbackModal
-        title={editing ? 'Produto alterado com sucesso' : 'Produto cadastrado com sucesso!'}
-        image={<img style={{ marginBottom: 90 }} src='/images/product-successfully-registered.svg' />}
-        buttonText='Ok'
-        open={openModal}
-        action={redirect}
-      />
     </React.Fragment>
   )
 }
 
-export default NewProduct
+export default Product

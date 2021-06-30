@@ -32,6 +32,12 @@ export function Menu() {
             Produtos
           </button>
         </Link>
+        <Link href='/daily-production'>
+          <button>
+            <ProductsIcon />
+            Produção
+          </button>
+        </Link>
         <Link href='/order'>
           <button>
             <SalesIcon />
