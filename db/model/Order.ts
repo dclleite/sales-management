@@ -5,6 +5,7 @@ export type Order = {
   orderDate: string
   deliveryDate: string
   totalPrice: number
+  completedOrder: boolean
 }
 
 export type formattedOrder = {
@@ -13,6 +14,7 @@ export type formattedOrder = {
   orderDate: string
   deliveryDate: string
   totalPrice: number
+  completedOrder: boolean
 }
 
 export enum OrderChannels {
