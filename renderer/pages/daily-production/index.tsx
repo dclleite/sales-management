@@ -15,10 +15,6 @@ import { getProductions } from '../../services/DailyProductionService'
 import FeedbackModal from '../../components/FeedbackModal'
 import ModalNota from '../../components/ModalNota'
 
-function renderNota() {
-  return <ModalNota open={false} close={console.log} />
-}
-
 function renderActTable(productionId) {
   return (
     <div style={{ display: 'flex', gap: 30, alignItems: 'center' }}>
@@ -46,8 +42,12 @@ interface ProductsSearch {
   totalPages: number
 }
 
-async function getProductionByPage(page: number, set: Function): Promise<ProductsSearch> {
+async function getProductionByPage(page: number, set: Function, search?: string): Promise<ProductsSearch> {
   const products = (await getProductions()).sort((p1, p2) => new Date(p1.date).getTime() - new Date(p2.date).getTime())
+  let filter = products
+  if (search) {
+    filter = products.filter(product => product.productName.toLowerCase().includes(search.toLowerCase()))
+  }
   const startIndex = (page - 1) * PRODUCTS_PER_PAGE
   const pageProducts = products.slice(startIndex, startIndex + PRODUCTS_PER_PAGE)
   const newProducts = pageProducts.map((production) => [
@@ -56,9 +56,7 @@ async function getProductionByPage(page: number, set: Function): Promise<Product
     production.quantity.toString(),
     renderActTable(production.id),
   ])
-  if (newProducts.length > 0) {
-    set(newProducts)
-  }
+  set(newProducts)
   return {
     products: newProducts,
     totalPages: Math.ceil(products.length / PRODUCTS_PER_PAGE),
@@ -69,6 +67,7 @@ function Product() {
   const [products, setProducts] = useState<(string | JSX.Element)[][]>([])
   const [page, setPage] = useState(1)
   const [lastPage, setLastPage] = useState(1)
+  const [search, setSearch] = useState('')
   const headers = ['Produto', 'Data', 'Quantidade', 'Ações']
 
   useEffect(() => {
@@ -91,6 +90,10 @@ function Product() {
     }
   }
 
+  function applySearch() {
+    getProductionByPage(1, setProducts, search).then(() => setPage(1))
+  }
+
   return (
     <React.Fragment>
       <Head>
@@ -98,7 +101,7 @@ function Product() {
       </Head>
       <div className={styles.productContainer}>
         <div className={styles.header}>
-          <SearchInput value='' onChange={(value) => console.log(value)} />
+          <SearchInput value={search} onChange={setSearch} onClick={applySearch} />
           <Link href='/daily-production/new'>
             <Button>Adicionar nova produção</Button>
           </Link>
@@ -108,7 +111,6 @@ function Product() {
           <Table headers={headers} bodies={products} />
         </div>
       </div>
-      {renderNota()}
     </React.Fragment>
   )
 }

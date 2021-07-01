@@ -54,22 +54,24 @@ interface ProductsSearch {
   totalPages: number
 }
 
-function getProductsByPage(page: number, set: Function): Promise<ProductsSearch> {
+function getProductsByPage(page: number, set: Function, search?: string): Promise<ProductsSearch> {
   return getProducts().then((products) => {
     const startIndex = (page - 1) * PRODUCTS_PER_PAGE
-    const pageProducts = products.slice(startIndex, startIndex + PRODUCTS_PER_PAGE)
+    let filter = products
+    if (search) {
+      filter = products.filter(product => product.name.toLocaleLowerCase().includes(search.toLocaleLowerCase()))
+    }
+    const pageProducts = filter.slice(startIndex, startIndex + PRODUCTS_PER_PAGE)
     const newProducts = pageProducts.map((product) => [
       product.name,
       product.unit,
       formatPrice(product.price),
       renderActTable(product.id),
     ])
-    if (newProducts.length > 0) {
-      set(newProducts)
-    }
+    set(newProducts)
     return {
       products: newProducts,
-      totalPages: Math.ceil(products.length / PRODUCTS_PER_PAGE),
+      totalPages: Math.ceil(filter.length / PRODUCTS_PER_PAGE),
     }
   })
 }
@@ -78,6 +80,7 @@ function Product() {
   const [products, setProducts] = useState<(string | JSX.Element)[][]>([])
   const [page, setPage] = useState(1)
   const [lastPage, setLastPage] = useState(1)
+  const [search, setSearch] = useState('')
   const headers = ['Produto', 'Unidade', 'Preço', 'Ações']
 
   useEffect(() => {
@@ -100,8 +103,8 @@ function Product() {
     }
   }
 
-  async function addProduct(event: any) {
-    console.log(event)
+  function applySearch() {
+    getProductsByPage(1, setProducts, search).then(() => setPage(1))
   }
 
   return (
@@ -111,7 +114,7 @@ function Product() {
       </Head>
       <div className={styles.productContainer}>
         <div className={styles.header}>
-          <SearchInput value='' onChange={(value) => console.log(value)} />
+          <SearchInput value={search} onChange={setSearch} onClick={applySearch} />
           <Link href='/product/new-product'>
             <Button>Adicionar novo produto</Button>
           </Link>
