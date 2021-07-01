@@ -161,16 +161,6 @@ function newOrder() {
       .then(() => {
         setOpenModal(true)
       })
-
-    // Promise.all(orderProductList.map(async (value) => {
-    //   updateProductStock({
-    //     id: 'e614a05f-1b01-4c12-ad25-300fa3739d77',
-    //     productId: 'a19dc155-b30b-4545-ba04-4187e2197a09',
-    //     quantity: 200,
-    //     reservedQuantity: 10,
-    //   })
-    // }))
-    // getStockByProductIds
   }
 
   function validateForm() {
@@ -270,7 +260,7 @@ function newOrder() {
     return (
       <FeedbackModal
         title={screenTexts.FeedbackTitle}
-        image={<img src='/images/successfully-registered-sale.svg' />}
+        image={<img style={{ marginBottom: 50 }} src='/images/successfully-registered-sale.svg' />}
         buttonText='Ok'
         open={openModal}
         action={redirect}

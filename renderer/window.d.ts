@@ -49,6 +49,7 @@ declare interface Window {
     orderProductQueries: {
       getAll: () => Promise<import('../db/model/OrderProduct').OrderProduct[]>
       getById: (id: string) => Promise<import('../db/model/OrderProduct').OrderProduct>
+      getByOrderId: (orderId: string) => Promise<import('../db/model/OrderProduct').OrderProduct[]>
       insert: (orderProduct: import('../db/model/OrderProduct').OrderProduct) => Promise<string[]>
       insertList: (orderProduct: import('../db/model/OrderProduct').OrderProduct[]) => Promise<string[]>
     }

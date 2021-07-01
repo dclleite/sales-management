@@ -9,8 +9,9 @@ const knexConnection = createConnection()
 ipcMain.handle(OrderProductChannels.GET_BY_ID, (event, id: string) => {
   return knexConnection<OrderProduct>('orderProduct').where('id', id).first()
 })
+
 ipcMain.handle(OrderProductChannels.GET_BY_ORDER_ID, (event, orderId: string) => {
-  return knexConnection<OrderProduct>('orderProduct').where('orderId ', orderId).first()
+  return knexConnection<OrderProduct>('orderProduct').where('orderId ', orderId)
 })
 
 ipcMain.handle(OrderProductChannels.GET_ALL, (event) => {

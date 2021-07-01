@@ -15,6 +15,7 @@ export type formattedOrder = {
   orderDate: string
   deliveryDate: string
   totalPrice: number
+  discount: number
   completedOrder: boolean
 }
 
