@@ -40,7 +40,16 @@ declare interface Window {
     }
 
     orderQueries: {
+      getById: (id: string) => Promise<import('../db/model/Order').Order>
       getAll: (searchName?: string) => Promise<import('../db/model/Order').formattedOrder[]>
+      insert: (order: import('../db/model/Order').Order) => Promise<string[]>
+    }
+
+    orderProductQueries: {
+      getAll: () => Promise<import('../db/model/OrderProduct').OrderProduct[]>
+      getById: (id: string) => Promise<import('../db/model/OrderProduct').OrderProduct>
+      insert: (orderProduct: import('../db/model/OrderProduct').OrderProduct) => Promise<string[]>
+      insertList: (orderProduct: import('../db/model/OrderProduct').OrderProduct[]) => Promise<string[]>
     }
   }
 }

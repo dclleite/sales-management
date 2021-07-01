@@ -48,6 +48,7 @@ exports.up = function (knex) {
       table.string('orderDate').notNullable()
       table.string('deliveryDate').notNullable()
       table.decimal('totalPrice').notNullable()
+      table.decimal('discount').notNullable()
       table.boolean('completedOrder')
 
       table.foreign('clientId').references('id').inTable('client')

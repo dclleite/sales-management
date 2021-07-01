@@ -110,12 +110,12 @@ function order() {
         </div>
         <div className={styles.tableContainer}>
           <PageControl back={previousPage} next={nextPage} currentPage={page} totalPages={lastPage} />
-          <Table
+          {/* <Table
             headers={headers}
             bodies={formatOrderToTable(orderList, (order) => {
               return <a>teste</a>
             })}
-          />
+          /> */}
         </div>
       </div>
     </React.Fragment>

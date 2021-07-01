@@ -5,6 +5,7 @@ export type Order = {
   orderDate: string
   deliveryDate: string
   totalPrice: number
+  discount: number
   completedOrder: boolean
 }
 

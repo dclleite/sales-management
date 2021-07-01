@@ -44,6 +44,12 @@ export function Menu() {
             Vendas
           </button>
         </Link>
+        <Link href='/order'>
+          <button>
+            <ProductsIcon />
+            Estoque
+          </button>
+        </Link>
         <Link href='/client'>
           <button>
             <BackupIcon />

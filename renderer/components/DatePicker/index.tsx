@@ -1,14 +1,11 @@
 import React from 'react'
 import styles from './styles.module.scss'
-import DateFnsUtils from '@date-io/date-fns';
-import {
-  MuiPickersUtilsProvider,
-  DatePicker,
-} from '@material-ui/pickers';
+import DateFnsUtils from '@date-io/date-fns'
+import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers'
 
 interface IDatePickerProps {
-  onChange: (event: any) => void,
-  value: any,
+  onChange: (event: any) => void
+  value: any
   label: string
   style?: any
 }
@@ -16,15 +13,15 @@ interface IDatePickerProps {
 export function CustomDatePicker({ onChange, label, style = {}, value = '' }: IDatePickerProps) {
   return (
     <div className={styles.custmpickerContainer} style={{ display: 'flex', flexDirection: 'column', ...style }}>
-      <label className={styles.label} >{label}</label>
+      <label className={styles.label}>{label}</label>
       <div className={styles.pickerContainer}>
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
           <DatePicker
             disableToolbar
-            variant="inline"
-            format="MM/dd/yyyy"
-            margin="normal"
-            id="date-picker-inline"
+            variant='inline'
+            format='dd/MM/yyyy'
+            margin='normal'
+            id='date-picker-inline'
             value={value}
             onChange={onChange}
             InputProps={{
@@ -35,5 +32,4 @@ export function CustomDatePicker({ onChange, label, style = {}, value = '' }: ID
       </div>
     </div>
   )
-
 }

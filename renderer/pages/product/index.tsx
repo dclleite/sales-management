@@ -107,11 +107,11 @@ function Product() {
   return (
     <React.Fragment>
       <Head>
-        <title>Products - Neoplast</title>
+        <title>Produtos - Neoplast</title>
       </Head>
       <div className={styles.productContainer}>
         <div className={styles.header}>
-          <SearchInput value='product' onChange={(value) => console.log(value)} />
+          <SearchInput value='' onChange={(value) => console.log(value)} />
           <Link href='/product/new-product'>
             <Button>Adicionar novo produto</Button>
           </Link>

@@ -144,4 +144,14 @@
       }
     }
   }
+  .buttonContainer {
+    display: flex;
+    align-items: center;
+    gap: 45px;
+
+    .cancel {
+      color: var(--orange-500);
+      text-align: center;
+    }
+  }
 }
