@@ -6,13 +6,16 @@ import { Button } from '../../components/Button'
 import { SearchInput } from '../../components/SearchInput'
 import { Table } from '../../components/Table'
 import { PageControl } from '../../components/PageControl'
-import { PencilIcon } from '../../components/Icons'
+import { PencilIcon, EyeIcon } from '../../components/Icons'
 
 import { getOrders } from '../../services/OrderService'
+import { getOrderProductsByOrderId } from '../../services/OrderProductService'
 
 import { formattedOrder } from '../../../db/model/Order'
 
 import styles from './styles.module.scss'
+import ModalNota, { SaleNote } from '../../components/ModalNota'
+import { OrderProduct } from '../../../db/model/OrderProduct'
 
 const ORDER_PER_PAGE = 10
 
@@ -22,8 +25,42 @@ interface OrderSearch {
   searchedName: string
 }
 
+const initialState: SaleNote = {
+  total: 0,
+  discount: 0,
+  date: '',
+  clientName: '',
+  clientAddress: '',
+  clientCpfCnpj: '',
+  products: [],
+}
+
 function formatOrderToTable(orderList: formattedOrder[], render: (orderList: formattedOrder) => JSX.Element) {
-  return orderList.map((order) => [order.client.name, order.totalPrice, new Date(order.orderDate), render(order)])
+  return orderList.map((order) => [
+    order.client.name,
+    order.totalPrice,
+    new Date(order.orderDate).toLocaleDateString(),
+    render(order),
+  ])
+}
+
+function formatOrderToNote(order: formattedOrder, orderProductList: OrderProduct[]): SaleNote {
+  return {
+    total: order.totalPrice,
+    discount: order.discount,
+    date: order.orderDate,
+    clientName: order.client.name,
+    clientAddress: order.client.street,
+    clientCpfCnpj: order.client.cpfCnpj,
+    products: orderProductList.map(({ productId, name, unit, price, quantity }) => ({
+      id: productId,
+      productName: name,
+      unit,
+      unitPrice: price,
+      quantity,
+      total: quantity * price,
+    })),
+  }
 }
 
 function getOrderListByPage(page: number, searchName?: string): Promise<OrderSearch> {
@@ -40,11 +77,15 @@ function getOrderListByPage(page: number, searchName?: string): Promise<OrderSea
 
 function order() {
   const [orderList, setOrderList] = useState<formattedOrder[]>([])
+  const [saleNote, setSaleNote] = useState<SaleNote>(initialState)
+
   const [searchName, setSearchName] = useState('')
   const [searchedName, setSearchedName] = useState('')
 
   const [page, setPage] = useState(1)
   const [lastPage, setLastPage] = useState(1)
+
+  const [openModalNote, setOpenModalNote] = useState(false)
 
   const headers = ['Cliente', 'Valor', 'Data da venda', 'Ações']
 
@@ -83,6 +124,30 @@ function order() {
     }
   }
 
+  function viewNote(order: formattedOrder) {
+    getOrderProductsByOrderId(order.id).then((response) => {
+      setSaleNote(formatOrderToNote(order, response))
+      setOpenModalNote(true)
+    })
+  }
+
+  function renderActTable(order: formattedOrder) {
+    return (
+      <div style={{ display: 'flex', gap: 20, alignItems: 'center', justifyContent: 'flex-start' }}>
+        <button onClick={() => viewNote(order)}>
+          <EyeIcon />
+        </button>
+        <button>
+          <PencilIcon />
+        </button>
+      </div>
+    )
+  }
+
+  function renderNote() {
+    return <ModalNota open={openModalNote} close={() => setOpenModalNote(false)} sale={saleNote} />
+  }
+
   return (
     <React.Fragment>
       <Head>
@@ -103,6 +168,7 @@ function order() {
                 }
               })
             }}
+            placeholder='Pesquisar cliente'
           />
           <Link href='/order/new'>
             <Button>Registrar nova venda</Button>
@@ -110,14 +176,10 @@ function order() {
         </div>
         <div className={styles.tableContainer}>
           <PageControl back={previousPage} next={nextPage} currentPage={page} totalPages={lastPage} />
-          <Table
-            headers={headers}
-            bodies={formatOrderToTable(orderList, (order) => {
-              return <a>teste</a>
-            })}
-          />
+          <Table headers={headers} bodies={formatOrderToTable(orderList, renderActTable)} />
         </div>
       </div>
+      {renderNote()}
     </React.Fragment>
   )
 }

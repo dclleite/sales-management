@@ -46,7 +46,6 @@ function NewProduct() {
     } else {
       saveProduct(product)
         .then(([id]) => {
-          console.log(id)
           return saveProductStock({
             id: '',
             productId: id,

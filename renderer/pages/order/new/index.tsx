@@ -25,6 +25,9 @@ import { getProducts } from '../../../services/ProductService'
 import { getClients } from '../../../services/ClientService'
 import { getByClientId } from '../../../services/ProductPriceService'
 import { formatPrice, priceValidation } from '../../../utils/Formatter'
+import { insertOrder } from '../../../services/OrderService'
+import { insertOrderProductList } from '../../../services/OrderProductService'
+import { getStockByProductIds, updateProductStock } from '../../../services/ProductSotckService'
 
 const inititalState = {
   id: '',
@@ -32,11 +35,11 @@ const inititalState = {
   orderDate: new Date().toISOString(),
   deliveryDate: new Date().toISOString(),
   totalPrice: 0,
+  discount: 0,
   completedOrder: false,
 } as Order
 
 const inititalOrderProductState = {
-  id: '',
   orderId: '',
   productId: '',
   quantity: 1,
@@ -46,7 +49,7 @@ const inititalOrderProductState = {
 
 function formatOrderProductList(orderProductList: OrderProduct[], render: (index: number) => JSX.Element) {
   return orderProductList.map((orderProduct, index) => [
-    orderProduct.quantity.toString(),
+    orderProduct.name,
     orderProduct.quantity.toString(),
     formatPrice(orderProduct.price),
     formatPrice(orderProduct.quantity * orderProduct.price),
@@ -59,7 +62,7 @@ function newOrder() {
 
   const [screenTexts, setScreenTexts] = useState({
     title: 'Registro de venda',
-    FeedbackTitle: 'Cliente cadastrado com sucesso!',
+    FeedbackTitle: 'Venda registrada com sucesso!',
   })
   const [order, setOrder] = useState<Order>(inititalState)
   const [orderProduct, setOrderProduct] = useState<OrderProduct>(inititalOrderProductState)
@@ -69,7 +72,7 @@ function newOrder() {
   const [products, setProducts] = useState<Product[]>([])
   const [productsPrice, setProductsPrice] = useState<ProductPrice[]>([])
 
-  const [discountPrice, setDiscountPrice] = useState(0)
+  const [openModal, setOpenModal] = useState(false)
 
   const headers = ['Produto', 'Quantidade', 'Valor unitário', 'Valor total', 'Ações']
 
@@ -83,25 +86,27 @@ function newOrder() {
     if (order.clientId) {
       getByClientId(order.clientId).then((response) => {
         setProductsPrice(response)
-        console.log(response)
       })
     }
   }, [order.clientId])
 
   useEffect(() => {
-    setOrder({ ...order, totalPrice: orderProduct.quantity * orderProduct.price })
-  }, [orderProduct.productId, orderProduct.quantity])
+    const subTotal = getSubtotal()
+    const totalPrice = subTotal > 0 && order.discount <= subTotal ? subTotal - order.discount : 0
+
+    setOrder({ ...order, totalPrice })
+  }, [orderProductList, order.discount])
 
   function onChangeClient(event) {
     setOrder({ ...order, clientId: event.target.value })
   }
 
   function onChangeOrderDate(event) {
-    setOrder({ ...order, orderDate: event.target.value })
+    setOrder({ ...order, orderDate: new Date(event).toISOString() })
   }
 
   function onChangeDeliveryDate(event) {
-    setOrder({ ...order, deliveryDate: event.target.value })
+    setOrder({ ...order, deliveryDate: new Date(event).toISOString() })
   }
 
   function onChangeProduct(event) {
@@ -119,7 +124,7 @@ function newOrder() {
   }
 
   function onChangeDiscount(value: string) {
-    setDiscountPrice(priceValidation(value))
+    setOrder({ ...order, discount: priceValidation(value) })
   }
 
   function pushOrderProduct() {
@@ -136,6 +141,35 @@ function newOrder() {
     clone.splice(index, 1)
 
     setOrderProductList([...clone])
+  }
+
+  function registerOrder() {
+    insertOrder(order)
+      .then(([orderId]) => insertOrderProductList(orderProductList.map((value) => ({ ...value, orderId }))))
+      .then(() => getStockByProductIds(orderProductList.map((value) => value.productId)))
+      .then((productStockList) =>
+        Promise.all(
+          productStockList.map((stock) => {
+            const newStock = {
+              ...stock,
+              quantity: stock.quantity - orderProductList.find((value) => value.productId === stock.productId).quantity,
+            }
+            return updateProductStock(newStock)
+          })
+        )
+      )
+      .then(() => {
+        setOpenModal(true)
+      })
+  }
+
+  function validateForm() {
+    return order.clientId && orderProductList.length > 0
+  }
+
+  function redirect() {
+    setOpenModal(false)
+    router.back()
   }
 
   function renderFirstInputContainer() {
@@ -178,7 +212,7 @@ function newOrder() {
         </div>
 
         <div style={{ width: '20%' }}>
-          <TextInput label='Valor Total' value={formatPrice(order.totalPrice)} disabled />
+          <TextInput label='Valor Total' value={formatPrice(orderProduct.quantity * orderProduct.price)} disabled />
         </div>
       </div>
     )
@@ -201,6 +235,37 @@ function newOrder() {
         />
       )
     }
+  }
+
+  function getSubtotal() {
+    return orderProductList.reduce((prevValue, value) => {
+      return prevValue + value.price * value.quantity
+    }, 0)
+  }
+
+  function renderFooterButtons() {
+    return (
+      <div className={styles.buttonContainer}>
+        <Button onClick={registerOrder} disabled={!validateForm()}>
+          Cadastrar
+        </Button>
+        <Link href='/order'>
+          <a className={styles.cancel}>Cancelar</a>
+        </Link>
+      </div>
+    )
+  }
+
+  function renderFeedbackModal() {
+    return (
+      <FeedbackModal
+        title={screenTexts.FeedbackTitle}
+        image={<img style={{ marginBottom: 50 }} src='/images/successfully-registered-sale.svg' />}
+        buttonText='Ok'
+        open={openModal}
+        action={redirect}
+      />
+    )
   }
 
   return (
@@ -226,23 +291,26 @@ function newOrder() {
 
         <span className={styles.subtotal}>
           <label>Subtotal</label>
-          <p>R$ 1.800,00</p>
+          <p>{formatPrice(getSubtotal())}</p>
         </span>
 
         <div className={styles.discountContainer}>
           <TextInput
             style={{ width: 300, marginBottom: 24 }}
             label='Desconto'
-            value={formatPrice(discountPrice)}
+            value={formatPrice(order.discount)}
             onChange={onChangeDiscount}
           />
           <span className={styles.spacing} />
           <span className={styles.total}>
             <label>Total</label>
-            <p>R$ 1.600,00</p>
+            <p>{formatPrice(order.totalPrice)}</p>
           </span>
         </div>
+
+        {renderFooterButtons()}
       </div>
+      {renderFeedbackModal()}
     </React.Fragment>
   )
 }

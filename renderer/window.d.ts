@@ -25,6 +25,7 @@ declare interface Window {
     productStockQueries: {
       getAll: () => Promise<import('../db/model/ProductStock').ProductStock[]>
       getById: (id: string) => Promise<import('../db/model/ProductStock').ProductStock>
+      getByProductIds: (productIds: string[]) => Promise<import('../db/model/ProductStock').ProductStock[]>
       insert: (productStock: import('../db/model/ProductStock').ProductStock) => Promise<string[]>
       update: (productStock: import('../db/model/ProductStock').ProductStock) => Promise<string>
     }
@@ -40,7 +41,17 @@ declare interface Window {
     }
 
     orderQueries: {
+      getById: (id: string) => Promise<import('../db/model/Order').Order>
       getAll: (searchName?: string) => Promise<import('../db/model/Order').formattedOrder[]>
+      insert: (order: import('../db/model/Order').Order) => Promise<string[]>
+    }
+
+    orderProductQueries: {
+      getAll: () => Promise<import('../db/model/OrderProduct').OrderProduct[]>
+      getById: (id: string) => Promise<import('../db/model/OrderProduct').OrderProduct>
+      getByOrderId: (orderId: string) => Promise<import('../db/model/OrderProduct').OrderProduct[]>
+      insert: (orderProduct: import('../db/model/OrderProduct').OrderProduct) => Promise<string[]>
+      insertList: (orderProduct: import('../db/model/OrderProduct').OrderProduct[]) => Promise<string[]>
     }
   }
 }

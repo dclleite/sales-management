@@ -7,72 +7,66 @@ import { MouseEventHandler, useEffect, useState } from 'react'
 
 export interface FeedbackModalProps {
   open: boolean
-  sale?: any
+  sale?: SaleNote
   close: MouseEventHandler<HTMLButtonElement>
+}
+
+export interface SaleNote {
+  total: number
+  discount: number
+  date: string
+  clientName: string
+  clientAddress: string
+  clientCpfCnpj: string
+  products: ProductNote[]
+}
+
+interface ProductNote {
+  id: string
+  productName: string
+  unit: string
+  unitPrice: number
+  quantity: number
+  total: number
 }
 
 function formatPrice(price: number) {
   return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(price)
 }
 
-const phone = '00 3221-0001';
-const cnpj = '00.000.000/0000-00'
-const address = 'Rua Nome de Algúem, 56934 - CEP 00000-000 - Nome da Cidade - NA'
-
-const saleExample = {
-  total: 45,
-  date: new Date().toLocaleDateString(),
-  clientName: 'Pedro Alvares Cabral',
-  clientAddress: 'Rua Nome de Algúem, 56934 - CEP 00000-000 - Nome da Cidade - NA',
-  clientCpfCnpj: '00.000.000/0000-00',
-  products: [
-    {
-      id: '1',
-      productName: 'Sacola 1',
-      unit: 'kg',
-      unitPrice: 50,
-      quantity: 5,
-      total: 250
-    },
-    {
-      id: '2',
-      productName: 'Sacola 1',
-      unit: 'kg',
-      unitPrice: 50,
-      quantity: 5,
-      total: 250
-    },
-  ]
-}
+const phone = '(35) 98835-6302 / 3631-1789'
+const cnpj = '10.298.109/0001-00'
+const iscEstadual = '001.087.216.0076'
 
 function getHeader() {
-  return <div className={styles.header}>
-    <div className={styles.imageContainer}>
-      <img width={100} height={70} src='/images/neoplast-logo.svg' />
-    </div>
-    <div style={{ flexGrow: 1 }}>
-      <div style={{ display: 'flex', marginBottom: '18px', }}>
-        <span style={{ marginRight: 'auto' }}>
-          Telefone: {phone}
-        </span>
-        <span>
-          CNPJ: {cnpj}
-        </span>
+  return (
+    <div className={styles.header}>
+      <div className={styles.imageContainer}>
+        <img width={100} height={70} src='/images/neoplast-logo.svg' />
       </div>
-      <span >
-        {address}
-      </span>
+      <div style={{ flexGrow: 1 }}>
+        <div style={{ display: 'flex', marginBottom: '15px', gap: 50 }}>
+          <span style={{ marginRight: 'auto' }}>Telefone: {phone}</span>
+          <span>CNPJ: {cnpj}</span>
+        </div>
+        <span>Insc. Est.: {iscEstadual}</span>
+      </div>
     </div>
-  </div>
+  )
 }
 
 function getSaleInfo(sale) {
   return (
     <div className={styles.info}>
-      <span>Emissão: {sale.date} </span><br />
-      <span>Nome: {sale.clientName} </span><br />
-      <span>Endereço: {sale.clientAddress} CPF/CNPJ: {sale.clientCpfCnpj}</span>
-    </div>)
+      <span>Emissão: {sale.date} </span>
+      <br />
+      <span>Nome: {sale.clientName} </span>
+      <br />
+      <span>
+        Endereço: {sale.clientAddress} CPF/CNPJ: {sale.clientCpfCnpj}
+      </span>
+    </div>
+  )
 }
 
 function getProductTable(sale) {
@@ -80,35 +74,21 @@ function getProductTable(sale) {
     <table className={styles.table}>
       <thead>
         <tr>
-          <th>
-            Produto
-          </th>
-          <th>
-            Quantidade
-          </th>
-          <th>
-            P. Unit
-          </th>
-          <th>
-            P. Total
-          </th>
+          <th>Produto</th>
+          <th>Quantidade</th>
+          <th>P. Unit</th>
+          <th>P. Total</th>
         </tr>
       </thead>
       <tbody>
-        {sale.products.map(product => (
+        {sale.products.map((product) => (
           <tr key={product.id}>
-            <td style={{ width: '500px', textAlign: 'left' }}>
-              {product.productName}
-            </td>
+            <td style={{ width: '500px', textAlign: 'left' }}>{product.productName}</td>
             <td>
               {product.quantity} ({product.unit})
             </td>
-            <td>
-              {formatPrice(product.unitPrice)}
-            </td>
-            <td>
-              {formatPrice(product.total)}
-            </td>
+            <td>{formatPrice(product.unitPrice)}</td>
+            <td>{formatPrice(product.total)}</td>
           </tr>
         ))}
       </tbody>
@@ -116,7 +96,7 @@ function getProductTable(sale) {
   )
 }
 
-function ModalNota({ open, sale = saleExample, close }: FeedbackModalProps) {
+function ModalNota({ open, sale, close }: FeedbackModalProps) {
   const [printing, setPrinting] = useState(false)
   function print() {
     setPrinting(true)
@@ -127,33 +107,36 @@ function ModalNota({ open, sale = saleExample, close }: FeedbackModalProps) {
       }, 1)
     }, 1)
   }
-  return (
-    <Modal PaperProps={{ className: styles.modal }} open={open}>
-      {!printing && <>
-        <button onClick={print}>
-          Imprimir
-        </button>
-        <button onClick={close}>
-          Fechar
-        </button>
-      </>
 
-      }
-      <div className={styles.mainContainer}>
+  function renderNoteContent() {
+    return (
+      <>
         {getHeader()}
         {getSaleInfo(sale)}
         {getProductTable(sale)}
-        <p>Valor total da nota: {formatPrice(sale.total)}</p>
+        <div className={styles.footer}>
+          <p>Desconto: {formatPrice(sale.discount)}</p>
+          <p>Valor total da nota: {formatPrice(sale.total)}</p>
+        </div>
+      </>
+    )
+  }
+
+  return (
+    <Modal PaperProps={{ className: styles.modal }} open={open}>
+      {!printing && (
+        <>
+          <button onClick={print}>Imprimir</button>
+          <button onClick={close}>Fechar</button>
+        </>
+      )}
+      <div className={styles.mainContainer}>
+        {renderNoteContent()}
 
         <br />
         <hr />
         <br />
-        <div style={{ padding: 'none', margin: 'none', pageBreakInside: 'avoid' }}>
-          {getHeader()}
-          {getSaleInfo(sale)}
-          {getProductTable(sale)}
-          <p>Valor total da nota: {formatPrice(sale.total)}</p>
-        </div>
+        <div style={{ padding: 'none', margin: 'none', pageBreakInside: 'avoid' }}>{renderNoteContent()}</div>
       </div>
     </Modal>
   )

@@ -48,7 +48,6 @@ export function TextInput({
   const [failureFeedback, setFailureFeedback] = useState(false)
 
   useEffect(() => {
-    console.log(value)
     if (value.length > 0 && !isFocus && validation && isInputValid === 'valid') {
       setSuccessfulFeedback(true)
       setFailureFeedback(false)

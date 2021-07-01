@@ -4,7 +4,7 @@ import styles from './styles.module.scss'
 
 interface TableProps extends React.TableHTMLAttributes<HTMLTableElement> {
   headers: string[]
-  bodies: (string | JSX.Element)[][]
+  bodies: (string | number | JSX.Element)[][]
 }
 
 export function Table({ headers, bodies, ...rest }: TableProps) {
