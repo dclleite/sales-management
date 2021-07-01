@@ -22,6 +22,8 @@ import { Order } from '../../../db/model/Order'
 import { OrderProduct } from '../../../db/model/OrderProduct'
 import { saveClient } from '../../services/ClientService'
 import { insert } from '../../services/ProductPriceService'
+import { insertOrder } from '../../services/OrderService'
+import { insertOrderProductList } from '../../services/OrderProductService'
 
 
 
@@ -84,12 +86,13 @@ const mapTables = async () => {
       completedOrder: true
     })
 
-    // console.log('productPrice')
-    // await Promise.all(newOrders.map(saveOrder))
-
-    // console.log('productPrice')
-    // await Promise.all(newProductOrders.map(saveOrderProduct))
   })
+  console.log('productPrice')
+  await Promise.all(newOrders.map(insertOrder))
+
+  console.log('productPrice')
+  await insertOrderProductList(newProductOrders)
+  console.log('finish')
 }
 
 function renderNota() {
