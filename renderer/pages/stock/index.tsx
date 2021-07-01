@@ -37,7 +37,7 @@ function getStockByPage(page: number): Promise<StockSearch> {
 
     return {
       productStocks: pageStocks,
-      totalPages: Math.ceil(pageStocks.length / STOCK_PER_PAGE),
+      totalPages: Math.ceil(productStock.length / STOCK_PER_PAGE),
     }
   })
 }
