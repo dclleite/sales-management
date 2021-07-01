@@ -10,7 +10,7 @@ export function Menu() {
   return (
     <div className={styles.menuContainer}>
       <div className={styles.imageContainer}>
-        <Image width={160} height={107} src='/images/neoplast-logo.svg' objectFit='contain' />
+        <img width={160} height={107} src='/images/neoplast-logo.svg' />
       </div>
 
       <div className={styles.buttons}>
@@ -44,7 +44,7 @@ export function Menu() {
             Vendas
           </button>
         </Link>
-        <Link href='/client'>
+        <Link href='/backup'>
           <button>
             <BackupIcon />
             Backup

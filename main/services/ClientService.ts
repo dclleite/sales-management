@@ -7,8 +7,20 @@ import { uuid } from 'uuidv4'
 
 const knexConnection = createConnection()
 
+import fs from 'fs'
+
 ipcMain.handle(ClientChannels.GET_BY_ID, (event, id: string) => {
   return knexConnection<Client>('client').where('id', id).first()
+})
+
+ipcMain.handle('get_fs', () => {
+  return fs.readFileSync('./resources/db')
+  // .readdirSync('./')
+})
+
+ipcMain.handle('write_fs', (event, path) => {
+  const file = fs.readFileSync(path)
+  return fs.writeFileSync('./resources/db', file)
 })
 
 ipcMain.handle(ClientChannels.GET_ALL, (event, searchName?: string) => {

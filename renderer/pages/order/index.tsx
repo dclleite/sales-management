@@ -23,7 +23,7 @@ interface OrderSearch {
 }
 
 function formatOrderToTable(orderList: formattedOrder[], render: (orderList: formattedOrder) => JSX.Element) {
-  return orderList.map((order) => [order.client.name, order.totalPrice, new Date(order.orderDate), render(order)])
+  return orderList.map((order) => [order.client.name, order.totalPrice, new Date(order.orderDate).toLocaleDateString(), render(order)])
 }
 
 function getOrderListByPage(page: number, searchName?: string): Promise<OrderSearch> {

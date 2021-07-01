@@ -8,6 +8,8 @@ import { ProductStockChannels } from '../db/model/ProductStock'
 import { OrderProduct, OrderProductChannels } from '../db/model/OrderProduct'
 
 contextBridge.exposeInMainWorld('api', {
+  getFs: () => ipcRenderer.invoke('get_fs'),
+  writeFs: (path) => ipcRenderer.invoke('write_fs', path),
   clientQueries: {
     getById: (id: string) => ipcRenderer.invoke(ClientChannels.GET_BY_ID, id),
     getAll: (searchName?: string) => ipcRenderer.invoke(ClientChannels.GET_ALL, searchName),
