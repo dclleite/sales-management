@@ -49,7 +49,7 @@ async function getProductionByPage(page: number, set: Function, search?: string)
     filter = products.filter(product => product.productName.toLowerCase().includes(search.toLowerCase()))
   }
   const startIndex = (page - 1) * PRODUCTS_PER_PAGE
-  const pageProducts = products.slice(startIndex, startIndex + PRODUCTS_PER_PAGE)
+  const pageProducts = filter.slice(startIndex, startIndex + PRODUCTS_PER_PAGE)
   const newProducts = pageProducts.map((production) => [
     production.productName,
     new Date(production.date).toLocaleDateString(),
@@ -59,7 +59,7 @@ async function getProductionByPage(page: number, set: Function, search?: string)
   set(newProducts)
   return {
     products: newProducts,
-    totalPages: Math.ceil(products.length / PRODUCTS_PER_PAGE),
+    totalPages: Math.ceil(filter.length / PRODUCTS_PER_PAGE),
   }
 }
 
@@ -95,8 +95,9 @@ function Product() {
 
   function applySearch() {
     setConfirmedSearch(search)
-    getProductionByPage(1, setProducts, search).then((search) => {
-      setLastPage(search.totalPages)
+    getProductionByPage(1, setProducts, search).then((result) => {
+      console.log(result)
+      setLastPage(result.totalPages)
       setPage(1)
     })
   }
