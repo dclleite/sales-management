@@ -81,6 +81,7 @@ function Product() {
   const [page, setPage] = useState(1)
   const [lastPage, setLastPage] = useState(1)
   const [search, setSearch] = useState('')
+  const [confirmedSearch, setConfirmedSearch] = useState('')
   const headers = ['Produto', 'Unidade', 'Preço', 'Ações']
 
   useEffect(() => {
@@ -90,21 +91,27 @@ function Product() {
   }, [])
 
   function nextPage() {
-    getProductsByPage(page + 1, setProducts).then((newProducts) => {
-      if (newProducts.products.length > 0) {
-        setPage(page + 1)
-      }
-    })
+    if (page < lastPage) {
+      getProductsByPage(page + 1, setProducts, confirmedSearch).then((newProducts) => {
+        if (newProducts.products.length > 0) {
+          setPage(page + 1)
+        }
+      })
+    }
   }
 
   function previousPage() {
     if (page > 1) {
-      getProductsByPage(page - 1, setProducts).then(() => setPage(page - 1))
+      getProductsByPage(page - 1, setProducts, confirmedSearch).then(() => setPage(page - 1))
     }
   }
 
   function applySearch() {
-    getProductsByPage(1, setProducts, search).then(() => setPage(1))
+    setConfirmedSearch(search)
+    getProductsByPage(1, setProducts, search).then((search) => {
+      setLastPage(search.totalPages)
+      setPage(1)
+    })
   }
 
   return (
