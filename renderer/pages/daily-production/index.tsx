@@ -91,18 +91,14 @@ function Product() {
     }
   }
 
-  async function addProduct(event: any) {
-    console.log(event)
-  }
-
   return (
     <React.Fragment>
       <Head>
-        <title>Products - Neoplast</title>
+        <title>Produção diária - Neoplast</title>
       </Head>
       <div className={styles.productContainer}>
         <div className={styles.header}>
-          <SearchInput value='product' onChange={(value) => console.log(value)} />
+          <SearchInput value='' onChange={(value) => console.log(value)} />
           <Link href='/daily-production/new'>
             <Button>Adicionar nova produção</Button>
           </Link>

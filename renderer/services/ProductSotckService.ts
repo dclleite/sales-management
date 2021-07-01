@@ -1,4 +1,4 @@
-import { ProductStock } from "../../db/model/ProductStock";
+import { ProductStock } from '../../db/model/ProductStock'
 
 export function getProductsStock(): Promise<ProductStock[]> {
   return window.api.productStockQueries.getAll()
@@ -6,6 +6,10 @@ export function getProductsStock(): Promise<ProductStock[]> {
 
 export function getProductStockById(id: string): Promise<ProductStock> {
   return window.api.productStockQueries.getById(id)
+}
+
+export function getStockByProductIds(productIds: string[]): Promise<ProductStock[]> {
+  return window.api.productStockQueries.getByProductIds(productIds)
 }
 
 export function saveProductStock(product: ProductStock): Promise<string[]> {

@@ -27,6 +27,7 @@ import { getByClientId } from '../../../services/ProductPriceService'
 import { formatPrice, priceValidation } from '../../../utils/Formatter'
 import { insertOrder } from '../../../services/OrderService'
 import { insertOrderProductList } from '../../../services/OrderProductService'
+import { getStockByProductIds, updateProductStock } from '../../../services/ProductSotckService'
 
 const inititalState = {
   id: '',
@@ -48,7 +49,7 @@ const inititalOrderProductState = {
 
 function formatOrderProductList(orderProductList: OrderProduct[], render: (index: number) => JSX.Element) {
   return orderProductList.map((orderProduct, index) => [
-    orderProduct.quantity.toString(),
+    orderProduct.name,
     orderProduct.quantity.toString(),
     formatPrice(orderProduct.price),
     formatPrice(orderProduct.quantity * orderProduct.price),
@@ -61,7 +62,7 @@ function newOrder() {
 
   const [screenTexts, setScreenTexts] = useState({
     title: 'Registro de venda',
-    FeedbackTitle: 'Cliente cadastrado com sucesso!',
+    FeedbackTitle: 'Venda registrada com sucesso!',
   })
   const [order, setOrder] = useState<Order>(inititalState)
   const [orderProduct, setOrderProduct] = useState<OrderProduct>(inititalOrderProductState)
@@ -70,6 +71,8 @@ function newOrder() {
   const [clients, setClients] = useState<Client[]>([])
   const [products, setProducts] = useState<Product[]>([])
   const [productsPrice, setProductsPrice] = useState<ProductPrice[]>([])
+
+  const [openModal, setOpenModal] = useState(false)
 
   const headers = ['Produto', 'Quantidade', 'Valor unitário', 'Valor total', 'Ações']
 
@@ -141,13 +144,42 @@ function newOrder() {
   }
 
   function registerOrder() {
-    insertOrder(order).then(([orderId]) => {
-      insertOrderProductList(orderProductList.map((value) => ({ ...value, orderId }))).then((response) => {})
-    })
+    insertOrder(order)
+      .then(([orderId]) => insertOrderProductList(orderProductList.map((value) => ({ ...value, orderId }))))
+      .then(() => getStockByProductIds(orderProductList.map((value) => value.productId)))
+      .then((productStockList) =>
+        Promise.all(
+          productStockList.map((stock) => {
+            const newStock = {
+              ...stock,
+              quantity: stock.quantity - orderProductList.find((value) => value.productId === stock.productId).quantity,
+            }
+            return updateProductStock(newStock)
+          })
+        )
+      )
+      .then(() => {
+        setOpenModal(true)
+      })
+
+    // Promise.all(orderProductList.map(async (value) => {
+    //   updateProductStock({
+    //     id: 'e614a05f-1b01-4c12-ad25-300fa3739d77',
+    //     productId: 'a19dc155-b30b-4545-ba04-4187e2197a09',
+    //     quantity: 200,
+    //     reservedQuantity: 10,
+    //   })
+    // }))
+    // getStockByProductIds
   }
 
   function validateForm() {
     return order.clientId && orderProductList.length > 0
+  }
+
+  function redirect() {
+    setOpenModal(false)
+    router.back()
   }
 
   function renderFirstInputContainer() {
@@ -234,6 +266,18 @@ function newOrder() {
     )
   }
 
+  function renderFeedbackModal() {
+    return (
+      <FeedbackModal
+        title={screenTexts.FeedbackTitle}
+        image={<img src='/images/successfully-registered-sale.svg' />}
+        buttonText='Ok'
+        open={openModal}
+        action={redirect}
+      />
+    )
+  }
+
   return (
     <React.Fragment>
       <Head>
@@ -276,6 +320,7 @@ function newOrder() {
 
         {renderFooterButtons()}
       </div>
+      {renderFeedbackModal()}
     </React.Fragment>
   )
 }

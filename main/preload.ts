@@ -61,6 +61,7 @@ contextBridge.exposeInMainWorld('api', {
   productStockQueries: {
     getAll: () => ipcRenderer.invoke(ProductStockChannels.GET_ALL),
     getById: (productId: string) => ipcRenderer.invoke(ProductStockChannels.GET_BY_PRODUCT_ID, productId),
+    getByProductIds: (productIds: string[]) => ipcRenderer.invoke(ProductStockChannels.GET_BY_PRODUCT_IDS, productIds),
     insert: (productStock: DailyProduction) => ipcRenderer.invoke(ProductStockChannels.INSERT, productStock),
     update: (productStock: DailyProduction) => ipcRenderer.invoke(ProductStockChannels.UPDATE, productStock),
   },
