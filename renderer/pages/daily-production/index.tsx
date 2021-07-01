@@ -43,7 +43,13 @@ const mapTables = async () => {
     street: old.endereco,
     phone: old.telefone,
     cpfCnpj: docMask(old.cpfCnpj),
-    id: old.id.toString()
+    id: old.id.toString(),
+    email: '',
+    streetNumber: '',
+    neighborhood: '',
+    cep: '',
+    city: '',
+    state: '',
   }))
 
   console.log('clients')
