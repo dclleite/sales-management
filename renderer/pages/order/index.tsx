@@ -86,7 +86,9 @@ function formatOrderToNote(order: FormattedOrder, orderProductList: OrderProduct
 function getOrderListByPage(page: number, searchName?: string): Promise<OrderSearch> {
   return getOrders(searchName ? `%${searchName}%` : '').then((orders) => {
     const startIndex = (page - 1) * ORDER_PER_PAGE
-    const pageClients = orders.slice(startIndex, startIndex + ORDER_PER_PAGE)
+    const pageClients = orders
+      .sort((p1, p2) => new Date(p2.orderDate).getTime() - new Date(p1.orderDate).getTime())
+      .slice(startIndex, startIndex + ORDER_PER_PAGE)
     return {
       orderList: pageClients,
       totalPages: Math.ceil(orders.length / ORDER_PER_PAGE),

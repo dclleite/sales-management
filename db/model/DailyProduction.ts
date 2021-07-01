@@ -11,6 +11,7 @@ export type ProductProduction = {
   productId: string
   date: string
   quantity: number
+  unit: string
 }
 
 export enum DailyProductionChannels {
