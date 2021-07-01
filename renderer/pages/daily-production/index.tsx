@@ -24,15 +24,25 @@ import { saveClient } from '../../services/ClientService'
 import { insert } from '../../services/ProductPriceService'
 import { getOrders, insertOrder } from '../../services/OrderService'
 import { insertOrderProduct, insertOrderProductList } from '../../services/OrderProductService'
+import { saveProductStock } from '../../services/ProductSotckService'
+import { cellphoneMask, cpfMask, cnpjMask } from '../../utils/Mask'
 
 
+const docMask = (value: string) => {
+  const newVal = value.replace('-', '').replace('/', '').replace('.', '')
+  if (newVal.length < 12) {
+    return cpfMask(newVal)
+  } else {
+    return cnpjMask(newVal)
+  }
+}
 
 const mapTables = async () => {
   const newClients = backup.clientes.map((old): Client => ({
     name: old.nome,
     street: old.endereco,
     phone: old.telefone,
-    cpfCnpj: old.cpfCnpj.replace('-', '').replace('/', '').replace('.', ''),
+    cpfCnpj: docMask(old.cpfCnpj),
     id: old.id.toString()
   }))
 
@@ -48,6 +58,14 @@ const mapTables = async () => {
 
   console.log('products')
   await Promise.all(newProducts.map(saveProduct))
+
+  console.log('stock')
+  await Promise.all(newProducts.map((product) => saveProductStock({
+    id: '',
+    productId: product.id,
+    quantity: 0,
+    reservedQuantity: 0,
+  })))
 
   const newPrices = backup.precosProduto.map((old): ProductPrice => ({
     price: old.valor,
@@ -65,13 +83,13 @@ const mapTables = async () => {
   backup.vendas.forEach((old) => {
     let total = 0
     old.itemsVenda.forEach(item => {
-      total += (item.valor * item.quantity)
+      total += (Number.parseFloat(item.valor) * Number.parseInt(item.quantidade))
 
       const { unit, name } = newProducts.find(p => p.id === item.produtoId.toString())
       newProductOrders.push({
         orderId: old.id.toString(),
         productId: item.produtoId.toString(),
-        quantity: Number.parseInt(item.quantity ?? 1),
+        quantity: Number.parseInt(item.quantidade ?? 1),
         price: item.valor,
         unit,
         name
