@@ -8,19 +8,22 @@ import { Table } from '../../components/Table'
 import { PageControl } from '../../components/PageControl'
 import { PencilIcon, EyeIcon } from '../../components/Icons'
 
-import { getOrders } from '../../services/OrderService'
+import { getOrders, updateOrder } from '../../services/OrderService'
 import { getOrderProductsByOrderId } from '../../services/OrderProductService'
 
-import { formattedOrder } from '../../../db/model/Order'
+import { FormattedOrder } from '../../../db/model/Order'
 
 import styles from './styles.module.scss'
 import ModalNota, { SaleNote } from '../../components/ModalNota'
 import { OrderProduct } from '../../../db/model/OrderProduct'
+import { formatPrice } from '../../utils/Formatter'
+import { Modal } from '../../components/Modal'
+import { getStockByProductIds, updateProductStock } from '../../services/ProductSotckService'
 
 const ORDER_PER_PAGE = 10
 
 interface OrderSearch {
-  orderList: formattedOrder[]
+  orderList: FormattedOrder[]
   totalPages: number
   searchedName: string
 }
@@ -35,16 +38,33 @@ const initialState: SaleNote = {
   products: [],
 }
 
-function formatOrderToTable(orderList: formattedOrder[], render: (orderList: formattedOrder) => JSX.Element) {
+const inititalCurrentOrderFormatter: FormattedOrder = {
+  id: '',
+  client: {
+    name: '',
+  },
+  orderDate: '',
+  deliveryDate: '',
+  totalPrice: 0,
+  discount: 0,
+  completedOrder: false,
+}
+
+function formatOrderToTable(
+  orderList: FormattedOrder[],
+  renderStatus: (order: FormattedOrder) => string | JSX.Element,
+  render: (order: FormattedOrder) => JSX.Element
+) {
   return orderList.map((order) => [
     order.client.name,
-    order.totalPrice,
-    new Date(order.orderDate).toLocaleDateString(),
+    formatPrice(order.totalPrice),
+    new Date(order.orderDate).toLocaleDateString('en-GB'),
+    renderStatus(order),
     render(order),
   ])
 }
 
-function formatOrderToNote(order: formattedOrder, orderProductList: OrderProduct[]): SaleNote {
+function formatOrderToNote(order: FormattedOrder, orderProductList: OrderProduct[]): SaleNote {
   return {
     total: order.totalPrice,
     discount: order.discount,
@@ -76,8 +96,9 @@ function getOrderListByPage(page: number, searchName?: string): Promise<OrderSea
 }
 
 function order() {
-  const [orderList, setOrderList] = useState<formattedOrder[]>([])
+  const [orderList, setOrderList] = useState<FormattedOrder[]>([])
   const [saleNote, setSaleNote] = useState<SaleNote>(initialState)
+  const [currentOrderFormatted, setCurrentOrderFormatted] = useState<FormattedOrder>(inititalCurrentOrderFormatter)
 
   const [searchName, setSearchName] = useState('')
   const [searchedName, setSearchedName] = useState('')
@@ -86,8 +107,9 @@ function order() {
   const [lastPage, setLastPage] = useState(1)
 
   const [openModalNote, setOpenModalNote] = useState(false)
+  const [openFinishSaleModal, setOpenFinishSaleModal] = useState(false)
 
-  const headers = ['Cliente', 'Valor', 'Data da venda', 'Ações']
+  const headers = ['Cliente', 'Valor', 'Data da venda', 'Status', 'Ações']
 
   useEffect(() => {
     getOrderListByPage(page).then((orderSearch) => {
@@ -124,28 +146,124 @@ function order() {
     }
   }
 
-  function viewNote(order: formattedOrder) {
+  function viewNote(order: FormattedOrder) {
     getOrderProductsByOrderId(order.id).then((response) => {
       setSaleNote(formatOrderToNote(order, response))
       setOpenModalNote(true)
     })
   }
 
-  function renderActTable(order: formattedOrder) {
+  function renderActTable(order: FormattedOrder) {
     return (
       <div style={{ display: 'flex', gap: 20, alignItems: 'center', justifyContent: 'flex-start' }}>
         <button onClick={() => viewNote(order)}>
           <EyeIcon />
         </button>
-        <button>
-          <PencilIcon />
-        </button>
+        <Link
+          href={{
+            pathname: '/order/new',
+            query: {
+              orderId: order.id,
+              editing: true,
+            },
+          }}
+        >
+          <button>
+            <PencilIcon />
+          </button>
+        </Link>
       </div>
     )
   }
 
+  function renderActStatus(order: FormattedOrder): string | JSX.Element {
+    if (order) {
+      if (order.completedOrder) {
+        return 'Finalizado'
+      } else {
+        return (
+          <div>
+            <a
+              onClick={() => {
+                setCurrentOrderFormatted(order)
+                setOpenFinishSaleModal(true)
+              }}
+            >
+              Finalizar venda
+            </a>
+          </div>
+        )
+      }
+    }
+  }
+
+  function finishSale() {
+    const { id, orderDate, deliveryDate, totalPrice, discount, client } = currentOrderFormatted
+    updateOrder({
+      id,
+      orderDate,
+      deliveryDate,
+      totalPrice,
+      discount,
+      clientId: client.id,
+      completedOrder: true,
+    }).then(() => {
+      getOrderProductsByOrderId(id)
+        .then((orderProductList) =>
+          getStockByProductIds(orderProductList.map((value) => value.productId)).then((productStockList) =>
+            Promise.all(
+              productStockList.map((stock) => {
+                const orderQuantity = orderProductList.find((value) => value.productId === stock.productId).quantity
+                return updateProductStock({
+                  ...stock,
+                  quantity: stock.quantity - orderQuantity,
+                  reservedQuantity: stock.reservedQuantity - orderQuantity,
+                })
+              })
+            )
+          )
+        )
+        .then(() => {
+          setCurrentOrderFormatted(inititalCurrentOrderFormatter)
+          setOpenFinishSaleModal(false)
+          getOrderListByPage(page, searchedName).then((orderSearch) => {
+            if (orderSearch.orderList.length > 0) {
+              setOrderList(orderSearch.orderList)
+              setLastPage(orderSearch.totalPages)
+            }
+          })
+        })
+    })
+  }
+
+  function renderFinishSaleModal() {
+    return (
+      <Modal open={openFinishSaleModal} onClose={() => setOpenFinishSaleModal(false)}>
+        <div>
+          <p>
+            Deseja finalizar a venda realizada no dia{' '}
+            {new Date(currentOrderFormatted.orderDate).toLocaleDateString('en-GB')} referente ao cliente{' '}
+            {currentOrderFormatted.client.name} no valor de {formatPrice(currentOrderFormatted.totalPrice)}?
+          </p>
+          <Button onClick={finishSale}>Finalizar</Button>
+          <Button appearance='ghost' onClick={() => setOpenFinishSaleModal(false)}>
+            Cancelar
+          </Button>
+        </div>
+      </Modal>
+    )
+  }
+
   function renderNote() {
-    return <ModalNota open={openModalNote} close={() => setOpenModalNote(false)} sale={saleNote} />
+    return (
+      <ModalNota
+        open={openModalNote}
+        close={() => {
+          setOpenModalNote(false)
+        }}
+        sale={saleNote}
+      />
+    )
   }
 
   return (
@@ -176,10 +294,11 @@ function order() {
         </div>
         <div className={styles.tableContainer}>
           <PageControl back={previousPage} next={nextPage} currentPage={page} totalPages={lastPage} />
-          <Table headers={headers} bodies={formatOrderToTable(orderList, renderActTable)} />
+          <Table headers={headers} bodies={formatOrderToTable(orderList, renderActStatus, renderActTable)} />
         </div>
       </div>
       {renderNote()}
+      {renderFinishSaleModal()}
     </React.Fragment>
   )
 }

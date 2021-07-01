@@ -9,7 +9,7 @@ export type Order = {
   completedOrder: boolean
 }
 
-export type formattedOrder = {
+export type FormattedOrder = {
   id?: string
   client: Client
   orderDate: string
@@ -24,4 +24,5 @@ export enum OrderChannels {
   GET_BY_CLIENT_ID = 'get-orders-by-client',
   GET_ALL = 'get-orders',
   INSERT_ORDER = 'insert-order',
+  UPDATE_ORDER = 'update-order',
 }

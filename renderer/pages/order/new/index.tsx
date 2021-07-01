@@ -25,8 +25,13 @@ import { getProducts } from '../../../services/ProductService'
 import { getClients } from '../../../services/ClientService'
 import { getByClientId } from '../../../services/ProductPriceService'
 import { formatPrice, priceValidation } from '../../../utils/Formatter'
-import { insertOrder } from '../../../services/OrderService'
-import { insertOrderProductList } from '../../../services/OrderProductService'
+import { insertOrder, getOrderById, updateOrder } from '../../../services/OrderService'
+import {
+  insertOrderProductList,
+  getOrderProductsByOrderId,
+  updateOrderProduct,
+  deleteOrderProduct,
+} from '../../../services/OrderProductService'
 import { getStockByProductIds, updateProductStock } from '../../../services/ProductSotckService'
 
 const inititalState = {
@@ -60,14 +65,17 @@ function formatOrderProductList(orderProductList: OrderProduct[], render: (index
 function newOrder() {
   const router = useRouter()
 
+  const { orderId, editing } = router.query
+
   const [screenTexts, setScreenTexts] = useState({
-    title: 'Registro de venda',
+    title: 'Registrar venda',
     FeedbackTitle: 'Venda registrada com sucesso!',
   })
   const [order, setOrder] = useState<Order>(inititalState)
   const [orderProduct, setOrderProduct] = useState<OrderProduct>(inititalOrderProductState)
 
   const [orderProductList, setOrderProductList] = useState<OrderProduct[]>([])
+  const [originalOrderProductList, setOriginalOrderProductList] = useState<OrderProduct[]>([])
   const [clients, setClients] = useState<Client[]>([])
   const [products, setProducts] = useState<Product[]>([])
   const [productsPrice, setProductsPrice] = useState<ProductPrice[]>([])
@@ -79,6 +87,17 @@ function newOrder() {
   useEffect(() => {
     getProducts().then(setProducts)
     getClients().then(setClients)
+
+    if (orderId) {
+      setScreenTexts({ FeedbackTitle: 'Venda atualizada com sucesso!', title: 'Editar venda' })
+      getOrderById(orderId.toString()).then((order) => {
+        setOrder({ ...order })
+        getOrderProductsByOrderId(orderId.toString()).then((values) => {
+          setOrderProductList(values)
+          setOriginalOrderProductList(values)
+        })
+      })
+    }
   }, [])
 
   useEffect(() => {
@@ -144,23 +163,65 @@ function newOrder() {
   }
 
   function registerOrder() {
-    insertOrder(order)
-      .then(([orderId]) => insertOrderProductList(orderProductList.map((value) => ({ ...value, orderId }))))
-      .then(() => getStockByProductIds(orderProductList.map((value) => value.productId)))
-      .then((productStockList) =>
-        Promise.all(
-          productStockList.map((stock) => {
-            const newStock = {
-              ...stock,
-              quantity: stock.quantity - orderProductList.find((value) => value.productId === stock.productId).quantity,
-            }
-            return updateProductStock(newStock)
+    if (orderId) {
+      updateOrder(order)
+        .then(() => deleteOrderProduct(originalOrderProductList.map((value) => value.id)))
+        .then(() => insertOrderProductList(orderProductList.map((value) => ({ ...value, orderId: order.id }))))
+        .then(() => getStockByProductIds(orderProductList.map((value) => value.productId)))
+        .then((originalProductStockList) =>
+          Promise.all(
+            originalProductStockList.map((originalStock) => {
+              const originalQuantity = originalOrderProductList.find(
+                (value) => value.productId === originalStock.productId
+              ).quantity
+              const newStock = {
+                ...originalStock,
+                ...(order.completedOrder
+                  ? { quantity: originalStock.quantity + originalQuantity }
+                  : { reservedQuantity: originalStock.reservedQuantity - originalQuantity }),
+              }
+              return updateProductStock(newStock)
+            })
+          )
+        )
+        .then(() => getStockByProductIds(orderProductList.map((value) => value.productId)))
+        .then((productStockList) =>
+          Promise.all(
+            productStockList.map((stock) => {
+              const newQuantity = orderProductList.find((value) => value.productId === stock.productId).quantity
+              const newStock = {
+                ...stock,
+                ...(order.completedOrder
+                  ? { quantity: stock.quantity - newQuantity }
+                  : { reservedQuantity: stock.reservedQuantity + newQuantity }),
+              }
+              return updateProductStock(newStock)
+            })
+          ).then(() => {
+            setOpenModal(true)
           })
         )
-      )
-      .then(() => {
-        setOpenModal(true)
-      })
+    } else {
+      insertOrder(order)
+        .then(([orderId]) => insertOrderProductList(orderProductList.map((value) => ({ ...value, orderId }))))
+        .then(() => getStockByProductIds(orderProductList.map((value) => value.productId)))
+        .then((productStockList) =>
+          Promise.all(
+            productStockList.map((stock) => {
+              const newStock = {
+                ...stock,
+                reservedQuantity:
+                  stock.reservedQuantity +
+                  orderProductList.find((value) => value.productId === stock.productId).quantity,
+              }
+              return updateProductStock(newStock)
+            })
+          )
+        )
+        .then(() => {
+          setOpenModal(true)
+        })
+    }
   }
 
   function validateForm() {
@@ -244,10 +305,11 @@ function newOrder() {
   }
 
   function renderFooterButtons() {
+    const buttonText = orderId ? 'Salvar' : 'Cadastrar'
     return (
       <div className={styles.buttonContainer}>
         <Button onClick={registerOrder} disabled={!validateForm()}>
-          Cadastrar
+          {buttonText}
         </Button>
         <Link href='/order'>
           <a className={styles.cancel}>Cancelar</a>

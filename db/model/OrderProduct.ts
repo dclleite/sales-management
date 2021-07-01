@@ -14,4 +14,6 @@ export enum OrderProductChannels {
   GET_ALL = 'get-order-products',
   INSERT = 'insert-order-product',
   INSERT_ORDER_PRODUCT_LIST = 'insert-order-product-list',
+  UPDATE_ORDER_PRODUCT = 'update-order-product',
+  DELETE = 'delete-order-product',
 }

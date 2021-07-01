@@ -42,8 +42,9 @@ declare interface Window {
 
     orderQueries: {
       getById: (id: string) => Promise<import('../db/model/Order').Order>
-      getAll: (searchName?: string) => Promise<import('../db/model/Order').formattedOrder[]>
+      getAll: (searchName?: string) => Promise<import('../db/model/Order').FormattedOrder[]>
       insert: (order: import('../db/model/Order').Order) => Promise<string[]>
+      update: (order: import('../db/model/Order').Order) => Promise<string>
     }
 
     orderProductQueries: {
@@ -51,6 +52,8 @@ declare interface Window {
       getById: (id: string) => Promise<import('../db/model/OrderProduct').OrderProduct>
       getByOrderId: (orderId: string) => Promise<import('../db/model/OrderProduct').OrderProduct[]>
       insert: (orderProduct: import('../db/model/OrderProduct').OrderProduct) => Promise<string[]>
+      update: (orderProduct: import('../db/model/OrderProduct').OrderProduct) => Promise<string>
+      delete: (ids: string[]) => Promise<string>
       insertList: (orderProduct: import('../db/model/OrderProduct').OrderProduct[]) => Promise<string[]>
     }
   }

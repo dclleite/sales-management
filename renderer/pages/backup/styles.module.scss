@@ -30,4 +30,10 @@
 .buttonContainer {
   display: flex;
   justify-content: center;
+  gap: 30px;
+
+  button {
+    width: 100%;
+    max-width: 250px;
+  }
 }

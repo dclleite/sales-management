@@ -1,4 +1,3 @@
-import { formattedOrder } from './../../db/model/Order'
 import { Client } from './../../db/model/Client'
 import { ipcMain } from 'electron'
 
@@ -44,4 +43,8 @@ ipcMain.handle(OrderChannels.INSERT_ORDER, async (event, order: Order) => {
   const id = uuid()
   await knexConnection<Order>('order').insert({ ...order, id })
   return [id]
+})
+
+ipcMain.handle(OrderChannels.UPDATE_ORDER, (event, order: Order) => {
+  return knexConnection<Order>('order').where('id', order.id).update(order)
 })

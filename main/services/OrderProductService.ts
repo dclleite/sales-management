@@ -25,3 +25,11 @@ ipcMain.handle(OrderProductChannels.INSERT, (event, orderProduct: OrderProduct) 
 ipcMain.handle(OrderProductChannels.INSERT_ORDER_PRODUCT_LIST, (event, orderProduct: OrderProduct[]) => {
   return knexConnection<OrderProduct>('orderProduct').insert(orderProduct.map((value) => ({ ...value, id: uuid() })))
 })
+
+ipcMain.handle(OrderProductChannels.UPDATE_ORDER_PRODUCT, (event, orderProduct: OrderProduct) => {
+  return knexConnection<OrderProduct>('orderProduct').where('id', orderProduct.id).update(orderProduct)
+})
+
+ipcMain.handle(OrderProductChannels.DELETE, (event, orderProductIds: string[]) => {
+  return knexConnection<OrderProduct>('orderProduct').whereIn('id', orderProductIds).del()
+})

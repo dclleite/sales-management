@@ -46,13 +46,13 @@ async function getProductionByPage(page: number, set: Function, search?: string)
   const products = (await getProductions()).sort((p1, p2) => new Date(p1.date).getTime() - new Date(p2.date).getTime())
   let filter = products
   if (search) {
-    filter = products.filter(product => product.productName.toLowerCase().includes(search.toLowerCase()))
+    filter = products.filter((product) => product.productName.toLowerCase().includes(search.toLowerCase()))
   }
   const startIndex = (page - 1) * PRODUCTS_PER_PAGE
   const pageProducts = filter.slice(startIndex, startIndex + PRODUCTS_PER_PAGE)
   const newProducts = pageProducts.map((production) => [
     production.productName,
-    new Date(production.date).toLocaleDateString(),
+    new Date(production.date).toLocaleDateString('en-GB'),
     production.quantity.toString(),
     renderActTable(production.id),
   ])
