@@ -1,6 +1,6 @@
-import { ProductStock } from '../../db/model/ProductStock'
+import { ProductStock, ProductStockFormatted } from '../../db/model/ProductStock'
 
-export function getProductsStock(): Promise<ProductStock[]> {
+export function getProductsStock(): Promise<ProductStockFormatted[]> {
   return window.api.productStockQueries.getAll()
 }
 

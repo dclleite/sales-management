@@ -14,12 +14,12 @@ export function Menu() {
       </div>
 
       <div className={styles.buttons}>
-        <Link href='/home'>
+        {/* <Link href='/home'>
           <button>
             <DashboardIcon />
             Dashboard
           </button>
-        </Link>
+        </Link> */}
         <Link href='/client'>
           <button>
             <ClientsIcon />
@@ -44,7 +44,7 @@ export function Menu() {
             Vendas
           </button>
         </Link>
-        <Link href='/order'>
+        <Link href='/stock'>
           <button>
             <ProductsIcon />
             Estoque

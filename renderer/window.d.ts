@@ -23,7 +23,7 @@ declare interface Window {
     }
 
     productStockQueries: {
-      getAll: () => Promise<import('../db/model/ProductStock').ProductStock[]>
+      getAll: () => Promise<import('../db/model/ProductStock').ProductStockFormatted[]>
       getById: (id: string) => Promise<import('../db/model/ProductStock').ProductStock>
       getByProductIds: (productIds: string[]) => Promise<import('../db/model/ProductStock').ProductStock[]>
       insert: (productStock: import('../db/model/ProductStock').ProductStock) => Promise<string[]>

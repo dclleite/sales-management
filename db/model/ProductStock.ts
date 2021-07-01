@@ -1,6 +1,14 @@
+import { Product } from './Product'
 export type ProductStock = {
   id: string
   productId: string
+  quantity: number
+  reservedQuantity: number
+}
+
+export type ProductStockFormatted = {
+  id: string
+  product: Product
   quantity: number
   reservedQuantity: number
 }
