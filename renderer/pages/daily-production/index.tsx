@@ -22,8 +22,8 @@ import { Order } from '../../../db/model/Order'
 import { OrderProduct } from '../../../db/model/OrderProduct'
 import { saveClient } from '../../services/ClientService'
 import { insert } from '../../services/ProductPriceService'
-import { insertOrder } from '../../services/OrderService'
-import { insertOrderProductList } from '../../services/OrderProductService'
+import { getOrders, insertOrder } from '../../services/OrderService'
+import { insertOrderProduct, insertOrderProductList } from '../../services/OrderProductService'
 
 
 
@@ -65,13 +65,13 @@ const mapTables = async () => {
   backup.vendas.forEach((old) => {
     let total = 0
     old.itemsVenda.forEach(item => {
-      total += item.valor
+      total += (item.valor * item.quantity)
 
       const { unit, name } = newProducts.find(p => p.id === item.produtoId.toString())
       newProductOrders.push({
         orderId: old.id.toString(),
         productId: item.produtoId.toString(),
-        quantity: Number.parseInt(item.quantity),
+        quantity: Number.parseInt(item.quantity ?? 1),
         price: item.valor,
         unit,
         name
@@ -83,20 +83,23 @@ const mapTables = async () => {
       orderDate: old.dataEntrega,
       deliveryDate: old.dataVenda,
       totalPrice: total,
-      completedOrder: true
+      completedOrder: true,
+      discount: Number.parseInt(old.desconto as string),
+      id: old.id.toString()
     })
 
   })
-  console.log('productPrice')
+  console.log('order')
   await Promise.all(newOrders.map(insertOrder))
 
-  console.log('productPrice')
-  await insertOrderProductList(newProductOrders)
+  console.log('productOrder')
+  await Promise.all(newProductOrders.map(insertOrderProduct))
   console.log('finish')
 }
 
 function renderNota() {
-  return <ModalNota open={false} close={console.log} />
+  // return <ModalNota open={false} close={console.log} />
+  return <></>
 }
 
 function renderActTable(productionId) {
