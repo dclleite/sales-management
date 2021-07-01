@@ -21,7 +21,8 @@ ipcMain.handle(DailyProductionChannels.GET_ALL, (event) => {
       productId: 'dailyProduction.productId',
       productName: 'product.name',
       date: 'dailyProduction.date',
-      quantity: 'dailyProduction.quantity'
+      quantity: 'dailyProduction.quantity',
+      unit: 'product.unit'
     })
 });
 

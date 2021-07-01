@@ -43,7 +43,7 @@ interface ProductsSearch {
 }
 
 async function getProductionByPage(page: number, set: Function, search?: string): Promise<ProductsSearch> {
-  const products = (await getProductions()).sort((p1, p2) => new Date(p1.date).getTime() - new Date(p2.date).getTime())
+  const products = (await getProductions()).sort((p1, p2) => new Date(p2.date).getTime() - new Date(p1.date).getTime())
   let filter = products
   if (search) {
     filter = products.filter((product) => product.productName.toLowerCase().includes(search.toLowerCase()))
@@ -53,7 +53,7 @@ async function getProductionByPage(page: number, set: Function, search?: string)
   const newProducts = pageProducts.map((production) => [
     production.productName,
     new Date(production.date).toLocaleDateString('en-GB'),
-    production.quantity.toString(),
+    production.quantity.toString() + ' (' + production.unit + ')',
     renderActTable(production.id),
   ])
   set(newProducts)
