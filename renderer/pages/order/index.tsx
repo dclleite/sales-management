@@ -6,7 +6,7 @@ import { Button } from '../../components/Button'
 import { SearchInput } from '../../components/SearchInput'
 import { Table } from '../../components/Table'
 import { PageControl } from '../../components/PageControl'
-import { PencilIcon, EyeIcon } from '../../components/Icons'
+import { PencilIcon, EyeIcon, CircleAlert } from '../../components/Icons'
 
 import { getOrders, updateOrder } from '../../services/OrderService'
 import { getOrderProductsByOrderId } from '../../services/OrderProductService'
@@ -240,17 +240,21 @@ function order() {
 
   function renderFinishSaleModal() {
     return (
-      <Modal open={openFinishSaleModal} onClose={() => setOpenFinishSaleModal(false)}>
-        <div>
+      <Modal maxWidth='sm' open={openFinishSaleModal} onClose={() => setOpenFinishSaleModal(false)}>
+        <div className={styles.finishSaleModal}>
+          <CircleAlert />
           <p>
             Deseja finalizar a venda realizada no dia{' '}
-            {new Date(currentOrderFormatted.orderDate).toLocaleDateString('en-GB')} referente ao cliente{' '}
-            {currentOrderFormatted.client.name} no valor de {formatPrice(currentOrderFormatted.totalPrice)}?
+            <strong>{new Date(currentOrderFormatted.orderDate).toLocaleDateString('en-GB')}</strong> referente ao
+            cliente <strong>{currentOrderFormatted.client.name}</strong> no valor de{' '}
+            <strong>{formatPrice(currentOrderFormatted.totalPrice)}</strong>?
           </p>
-          <Button onClick={finishSale}>Finalizar</Button>
-          <Button appearance='ghost' onClick={() => setOpenFinishSaleModal(false)}>
-            Cancelar
-          </Button>
+          <div className={styles.finishButtonContainer}>
+            <Button onClick={() => setOpenFinishSaleModal(false)}>Cancelar</Button>
+            <Button appearance='ghost' onClick={finishSale}>
+              Finalizar
+            </Button>
+          </div>
         </div>
       </Modal>
     )

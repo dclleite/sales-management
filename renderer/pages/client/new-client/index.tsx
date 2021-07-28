@@ -133,7 +133,7 @@ function NewClient() {
       <div className={styles.buttonContainer}>
         <Button
           appearance={buttonText === 'Editar dados' ? 'ghost' : 'default'}
-          disabled={!validateForm()}
+          disabled={buttonText !== 'Editar dados' && !validateForm()}
           onClick={() => {
             if (buttonText === 'Editar dados') {
               setIsEditing(true)

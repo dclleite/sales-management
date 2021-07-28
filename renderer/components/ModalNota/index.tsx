@@ -34,7 +34,7 @@ function formatPrice(price: number) {
   return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(price)
 }
 
-const phone = '(35) 98835-6302 / 3631-1789'
+const phone = '(35) 3631-1789'
 const cnpj = '10.298.109/0001-00'
 const iscEstadual = '001.087.216.0076'
 
@@ -55,7 +55,7 @@ function getHeader() {
   )
 }
 
-function getSaleInfo(sale) {
+function getSaleInfo(sale: SaleNote) {
   return (
     <div className={styles.info}>
       <span>Emissão: {sale.date} </span>
@@ -69,7 +69,7 @@ function getSaleInfo(sale) {
   )
 }
 
-function getProductTable(sale) {
+function getProductTable(sale: SaleNote) {
   return (
     <table className={styles.table}>
       <thead>
@@ -91,9 +91,24 @@ function getProductTable(sale) {
             <td>{formatPrice(product.total)}</td>
           </tr>
         ))}
+        {renderEmptyProductList(38 - sale.products.length)}
       </tbody>
     </table>
   )
+}
+
+function renderEmptyProductList(length: number) {
+  return [...Array(length)].map((value, index) => (
+    <tr key={`empty-product-${index}`}>
+      <td style={{ width: '500px', textAlign: 'left' }}>
+        {' '}
+        <div style={{ minHeight: 22 }} />
+      </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+  ))
 }
 
 function ModalNota({ open, sale, close }: FeedbackModalProps) {
@@ -130,14 +145,7 @@ function ModalNota({ open, sale, close }: FeedbackModalProps) {
           <button onClick={close}>Fechar</button>
         </>
       )}
-      <div className={styles.mainContainer}>
-        {renderNoteContent()}
-
-        <br />
-        <hr />
-        <br />
-        <div style={{ padding: 'none', margin: 'none', pageBreakInside: 'avoid' }}>{renderNoteContent()}</div>
-      </div>
+      <div className={styles.mainContainer}>{renderNoteContent()}</div>
     </Modal>
   )
 }

@@ -167,7 +167,7 @@ function newOrder() {
       updateOrder(order)
         .then(() => deleteOrderProduct(originalOrderProductList.map((value) => value.id)))
         .then(() => insertOrderProductList(orderProductList.map((value) => ({ ...value, orderId: order.id }))))
-        .then(() => getStockByProductIds(orderProductList.map((value) => value.productId)))
+        .then(() => getStockByProductIds(originalOrderProductList.map((value) => value.productId)))
         .then((originalProductStockList) =>
           Promise.all(
             originalProductStockList.map((originalStock) => {
