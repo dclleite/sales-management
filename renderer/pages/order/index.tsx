@@ -30,6 +30,7 @@ interface OrderSearch {
 
 const initialState: SaleNote = {
   total: 0,
+  orderNumber: 0,
   discount: 0,
   date: '',
   clientName: '',
@@ -40,6 +41,7 @@ const initialState: SaleNote = {
 
 const inititalCurrentOrderFormatter: FormattedOrder = {
   id: '',
+  orderNumber: 0,
   client: {
     name: '',
   },
@@ -67,6 +69,7 @@ function formatOrderToTable(
 function formatOrderToNote(order: FormattedOrder, orderProductList: OrderProduct[]): SaleNote {
   return {
     total: order.totalPrice,
+    orderNumber: order.orderNumber,
     discount: order.discount,
     date: order.orderDate,
     clientName: order.client.name,
@@ -200,9 +203,10 @@ function order() {
   }
 
   function finishSale() {
-    const { id, orderDate, deliveryDate, totalPrice, discount, client } = currentOrderFormatted
+    const { id, orderNumber, orderDate, deliveryDate, totalPrice, discount, client } = currentOrderFormatted
     updateOrder({
       id,
+      orderNumber,
       orderDate,
       deliveryDate,
       totalPrice,

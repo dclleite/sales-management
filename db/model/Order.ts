@@ -1,6 +1,7 @@
 import { Client } from './Client'
 export type Order = {
   id?: string
+  orderNumber: number
   clientId: string
   orderDate: string
   deliveryDate: string
@@ -11,6 +12,7 @@ export type Order = {
 
 export type FormattedOrder = {
   id?: string
+  orderNumber: number
   client: Client
   orderDate: string
   deliveryDate: string

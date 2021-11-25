@@ -22,9 +22,10 @@ ipcMain.handle(OrderChannels.GET_ALL, async (event, searchName?: string) => {
   const orderListLike = await (searchName ? orderList.where('name', 'like', searchName) : orderList)
 
   return orderListLike.map(
-    ({ orderId, orderDate, deliveryDate, totalPrice, completedOrder, clientId, discount, ...rest }) => {
+    ({ orderId, orderNumber, orderDate, deliveryDate, totalPrice, completedOrder, clientId, discount, ...rest }) => {
       return {
         id: orderId,
+        orderNumber,
         orderDate,
         deliveryDate,
         totalPrice,
@@ -41,7 +42,10 @@ ipcMain.handle(OrderChannels.GET_ALL, async (event, searchName?: string) => {
 
 ipcMain.handle(OrderChannels.INSERT_ORDER, async (event, order: Order) => {
   const id = uuid()
-  await knexConnection<Order>('order').insert({ ...order, id })
+  const orderNumberList = await knexConnection<Order>('order').max('orderNumber')
+  const orderNumber = Object.values(orderNumberList[0])[0] + 1
+
+  await knexConnection<Order>('order').insert({ ...order, id, orderNumber })
   return [id]
 })
 

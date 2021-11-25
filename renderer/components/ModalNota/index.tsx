@@ -13,6 +13,7 @@ export interface FeedbackModalProps {
 
 export interface SaleNote {
   total: number
+  orderNumber: number
   discount: number
   date: string
   clientName: string
@@ -58,7 +59,9 @@ function getHeader() {
 function getSaleInfo(sale: SaleNote) {
   return (
     <div className={styles.info}>
-      <span>Emissão: {sale.date} </span>
+      <span>Número da nota: {sale.orderNumber} </span>
+      <br />
+      <span>Emissão: {new Date(sale.date).toLocaleDateString('en-GB')} </span>
       <br />
       <span>Nome: {sale.clientName} </span>
       <br />
@@ -81,9 +84,9 @@ function getProductTable(sale: SaleNote) {
         </tr>
       </thead>
       <tbody>
-        {sale.products.map((product) => (
-          <tr key={product.id}>
-            <td style={{ width: '500px', textAlign: 'left' }}>{product.productName}</td>
+        {sale.products.map((product, indice) => (
+          <tr key={product.id + indice}>
+            <td style={{ width: '500px', textAlign: 'left', paddingLeft: 8 }}>{product.productName}</td>
             <td>
               {product.quantity} ({product.unit})
             </td>
@@ -91,7 +94,7 @@ function getProductTable(sale: SaleNote) {
             <td>{formatPrice(product.total)}</td>
           </tr>
         ))}
-        {renderEmptyProductList(38 - sale.products.length)}
+        {renderEmptyProductList(36 - sale.products.length)}
       </tbody>
     </table>
   )
