@@ -1,0 +1,29 @@
+.modalContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 25px;
+
+  text-align: center;
+
+  padding: 30px 100px 0;
+
+  .title {
+    font-family: Poppins;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 29px;
+    text-align: center;
+    letter-spacing: 0.01em;
+
+    color: var(--blue-300);
+  }
+
+  button {
+    position: absolute;
+    z-index: 2;
+    bottom: 30px;
+  }
+}

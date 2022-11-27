@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { forwardRef } from 'react'
 
 import styles from './styles.module.scss'
 
@@ -6,10 +6,12 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   appearance?: 'default' | 'ghost'
 }
 
-export function Button({ children, appearance = 'default', ...rest }: ButtonProps) {
-  return (
-    <button className={`${styles.button} ${styles[appearance]}`} {...rest}>
-      {children}
-    </button>
-  )
-}
+export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ children, appearance = 'default', ...rest }, ref) => {
+    return (
+      <button className={`${styles.button} ${styles[appearance]}`} ref={ref} {...rest}>
+        {children}
+      </button>
+    )
+  }
+)

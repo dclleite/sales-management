@@ -10,35 +10,47 @@ export function Menu() {
   return (
     <div className={styles.menuContainer}>
       <div className={styles.imageContainer}>
-        <Image width={160} height={107} src='/images/neoplast-logo.svg' objectFit='contain' />
+        <img width={160} height={107} src='/images/neoplast-logo.svg' />
       </div>
 
       <div className={styles.buttons}>
-        <Link href='/home'>
+        {/* <Link href='/home'>
           <button>
             <DashboardIcon />
             Dashboard
           </button>
-        </Link>
+        </Link> */}
         <Link href='/client'>
           <button>
             <ClientsIcon />
             Clientes
           </button>
         </Link>
-        <Link href='/client'>
+        <Link href='/product'>
           <button>
             <ProductsIcon />
             Produtos
           </button>
         </Link>
-        <Link href='/client'>
+        <Link href='/daily-production'>
+          <button>
+            <ProductsIcon />
+            Produção
+          </button>
+        </Link>
+        <Link href='/order'>
           <button>
             <SalesIcon />
             Vendas
           </button>
         </Link>
-        <Link href='/client'>
+        <Link href='/stock'>
+          <button>
+            <ProductsIcon />
+            Estoque
+          </button>
+        </Link>
+        <Link href='/backup'>
           <button>
             <BackupIcon />
             Backup

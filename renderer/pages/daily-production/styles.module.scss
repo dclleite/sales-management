@@ -1,0 +1,24 @@
+.productContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  align-items: center;
+  justify-content: center;
+
+  .header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+  }
+
+  .tableContainer {
+    width: 100%;
+  }
+
+  .cancel {
+    color: var(--orange-500);
+    text-align: center;
+    margin: auto 48px;
+  }
+}

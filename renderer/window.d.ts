@@ -1,20 +1,60 @@
 declare interface Window {
   api: {
-    // client session
-    getCliente: (id: number) => Promise<import('../db/model/Cliente').Client>
-    getClientes: () => Promise<import('../db/model/Cliente').Client[]>
-    insertCliente: (cliente: import('../db/model/Cliente').Client) => Promise<number[]>
-    insertClientes: (clientes: import('../db/model/Cliente').Client[]) => Promise<number[]>
+    productQueries: {
+      getById: (id: string) => Promise<import('../db/model/Product').Product>
+      getAll: () => Promise<import('../db/model/Product').Product[]>
+      insert: (product: import('../db/model/Product').Product) => Promise<string[]>
+      update: (product: import('../db/model/Product').Product) => Promise<string>
+    }
 
-    // product session
-    getProduto: (id: number) => Promise<import('../db/model/Produto').Produto>
-    getProdutos: () => Promise<import('../db/model/Produto').Produto[]>
-    insertProduto: (produto: import('../db/model/Produto').Produto) => Promise<number[]>
-    insertProdutos: (produtos: import('../db/model/Produto').Produto[]) => Promise<number[]>
+    clientQueries: {
+      getById: (id: string) => Promise<import('../db/model/Client').Client>
+      getAll: (serachName?: string) => Promise<import('../db/model/Client').Client[]>
+      getAvailableClients: (productId: string) => Promise<import('../db/model/Client').Client[]>
+      insert: (client: import('../db/model/Client').Client) => Promise<string[]>
+      update: (client: import('../db/model/Client').Client) => Promise<string>
+    }
 
-    // product price session
-    getPrecoProduto: (clienteId: number, produtoId: number) => Promise<any>
-    getPrecoProdutos: () => Promise<any>
-    insertPrecoProduto: (precoProduto: import('../db/model/ProductPrice').ProductPrice) => Promise<number[]>
+    productionQueries: {
+      getAll: () => Promise<import('../db/model/DailyProduction').ProductProduction[]>
+      getById: (id: string) => Promise<import('../db/model/DailyProduction').DailyProduction>
+      insert: (dailyProduction: import('../db/model/DailyProduction').DailyProduction) => Promise<string[]>
+      update: (dailyProduction: import('../db/model/DailyProduction').DailyProduction) => Promise<string>
+    }
+
+    productStockQueries: {
+      getAll: () => Promise<import('../db/model/ProductStock').ProductStockFormatted[]>
+      getById: (id: string) => Promise<import('../db/model/ProductStock').ProductStock>
+      getByProductIds: (productIds: string[]) => Promise<import('../db/model/ProductStock').ProductStock[]>
+      insert: (productStock: import('../db/model/ProductStock').ProductStock) => Promise<string[]>
+      update: (productStock: import('../db/model/ProductStock').ProductStock) => Promise<string>
+    }
+
+    productPriceQueries: {
+      getByProductId: (
+        productId: string,
+        searchName?: string
+      ) => Promise<import('../db/model/ProductPrice').FormattedProductPrice[]>
+      getByClientId: (clientId: string) => Promise<import('../db/model/ProductPrice').ProductPrice[]>
+      insert: (price: import('../db/model/ProductPrice').ProductPrice) => Promise<string[]>
+      update: (price: import('../db/model/ProductPrice').ProductPrice) => Promise<string>
+    }
+
+    orderQueries: {
+      getById: (id: string) => Promise<import('../db/model/Order').Order>
+      getAll: (searchName?: string) => Promise<import('../db/model/Order').FormattedOrder[]>
+      insert: (order: import('../db/model/Order').Order) => Promise<string[]>
+      update: (order: import('../db/model/Order').Order) => Promise<string>
+    }
+
+    orderProductQueries: {
+      getAll: () => Promise<import('../db/model/OrderProduct').OrderProduct[]>
+      getById: (id: string) => Promise<import('../db/model/OrderProduct').OrderProduct>
+      getByOrderId: (orderId: string) => Promise<import('../db/model/OrderProduct').OrderProduct[]>
+      insert: (orderProduct: import('../db/model/OrderProduct').OrderProduct) => Promise<string[]>
+      update: (orderProduct: import('../db/model/OrderProduct').OrderProduct) => Promise<string>
+      delete: (ids: string[]) => Promise<string>
+      insertList: (orderProduct: import('../db/model/OrderProduct').OrderProduct[]) => Promise<string[]>
+    }
   }
 }

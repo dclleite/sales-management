@@ -9,13 +9,15 @@ export interface TextInputProps {
   id?: string
   value: string
   label?: string
+  maxLength?: number
   feedback?: Feedback
-  onChange: (value: string) => void
+  onChange?: (value: string, inputName?: string) => void
   onBlur?: (value: string, isInputValid: boolean) => void
   onFocus?: () => void
   validation?: (value: string) => boolean
   required?: boolean
   disabled?: boolean
+  style?: React.CSSProperties
 }
 
 interface Feedback {
@@ -28,6 +30,7 @@ export function TextInput({
   name,
   id,
   label,
+  maxLength,
   feedback,
   onChange,
   onBlur,
@@ -35,19 +38,20 @@ export function TextInput({
   validation,
   required = false,
   disabled = false,
+  style = {},
 }: TextInputProps) {
   const ref = useRef<HTMLInputElement>(null)
-  const [isInputValid, setIsInputValid] = useState(true)
+  const [isInputValid, setIsInputValid] = useState<undefined | 'valid' | 'invalid'>(undefined)
   const [isFocus, setIsFocus] = useState(false)
 
   const [successfulFeedback, setSuccessfulFeedback] = useState(false)
   const [failureFeedback, setFailureFeedback] = useState(false)
 
   useEffect(() => {
-    if (value.length > 0 && !isFocus && isInputValid) {
+    if (value.length > 0 && !isFocus && validation && isInputValid === 'valid') {
       setSuccessfulFeedback(true)
       setFailureFeedback(false)
-    } else if (!isInputValid && (validation || required)) {
+    } else if (isInputValid === 'invalid' && (validation || required)) {
       setFailureFeedback(true)
       setSuccessfulFeedback(false)
     } else {
@@ -70,11 +74,12 @@ export function TextInput({
         </div>
       )
     }
+    return <div className={styles.icon}></div>
   }
 
   function renderFeedback() {
     if (feedback) {
-      if (!isInputValid && (validation || required)) {
+      if (isInputValid === 'invalid' && (validation || required)) {
         return (
           <span className={`${styles.feedback} ${styles.errorFeedback}`}>
             {feedback.errorMessage || 'Campo inválido'}
@@ -97,7 +102,7 @@ export function TextInput({
   }
 
   return (
-    <div className={styles.textInputContainer}>
+    <div className={styles.textInputContainer} style={{ ...style }}>
       <label className={styles.label}>{label}</label>
       <div className={`${styles.inputContainer} ${getStyleInputContainer()}`}>
         <input
@@ -107,25 +112,25 @@ export function TextInput({
           name={name}
           id={id}
           value={value}
+          maxLength={maxLength}
           onChange={(event) => {
-            console.log(event.target.validationMessage)
-            onChange(event.target.value)
+            onChange(event.target.value, event.target.name)
           }}
           onBlur={(event) => {
             let newIsInputValid = true
             if (required) {
               newIsInputValid = value.length > 0
             }
-            if (newIsInputValid && validation) {
+            if (newIsInputValid && value.length > 0 && validation) {
               newIsInputValid = validation(value)
             }
-            setIsInputValid(newIsInputValid)
+            setIsInputValid(newIsInputValid ? 'valid' : 'invalid')
             setIsFocus(false)
             onBlur && onBlur(value, newIsInputValid)
           }}
           onFocus={() => {
             setIsFocus(true)
-            setIsInputValid(true)
+            setIsInputValid('valid')
             onFocus && onFocus()
           }}
           disabled={disabled}

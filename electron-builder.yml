@@ -2,11 +2,15 @@ appId: com.example.nextron
 productName: sales-management
 copyright: Copyright © 2021 Eduardo Leite
 directories:
-    output: dist
-    buildResources: resources
+  output: dist
+  buildResources: resources
+extraResources:
+  - from: ./db/database.sqlite3
+    to: db
+
 files:
-    - from: .
-      filter:
-          - package.json
-          - app
+  - from: .
+    filter:
+      - package.json
+      - app
 publish: null

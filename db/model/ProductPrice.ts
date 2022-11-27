@@ -1,8 +1,22 @@
+import { Product } from './Product'
+import { Client } from './Client'
+
 export type ProductPrice = {
-  id?: string,
-  clienteId: string,
-  produtoId: string,
-  valor: number,
+  id?: string
+  clientId: string
+  productId: string
+  price: number
+}
+
+export type FormattedProductPrice = {
+  id?: string
+  clientId: string
+  clientName: string
+  clientCpfCnpj?: string
+  productId: string
+  productName?: string
+  unit?: string
+  price: number
 }
 
 export enum ProductPriceChannels {

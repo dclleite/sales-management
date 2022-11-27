@@ -13,6 +13,7 @@ import EyeIcon from './EyeIcon'
 import TrashIcon from './TrashIcon'
 import PencilIcon from './PencilIcon'
 import CloseIcon from './CloseIcon'
+import CircleAlert from './CircleAlert'
 
 export {
   CircleCheck,
@@ -30,4 +31,5 @@ export {
   TrashIcon,
   PencilIcon,
   CloseIcon,
+  CircleAlert,
 }

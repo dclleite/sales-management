@@ -1,0 +1,55 @@
+.modal {
+  max-width: 900px !important;
+  height: fit-content;
+  padding: 24px;
+  font-size: 14px;
+}
+
+.header {
+  display: flex;
+  border-bottom: solid black 5px;
+  margin-bottom: 8px;
+}
+
+.imageContainer {
+  margin-right: 16px;
+}
+
+.info {
+  margin-bottom: 8px;
+}
+
+.table {
+  width: 100%;
+  border: 1px solid black;
+  border-collapse: collapse;
+  page-break-inside: auto;
+  tbody {
+    tr {
+      page-break-inside: avoid;
+      page-break-after: auto;
+    }
+  }
+  thead {
+    tr {
+      page-break-inside: avoid;
+      page-break-after: auto;
+    }
+  }
+  td {
+    border: 1px solid black;
+    min-width: 120px;
+    text-align: center;
+  }
+  th {
+    border: 1px solid black;
+  }
+}
+
+.footer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 0;
+}

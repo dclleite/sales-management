@@ -1,6 +1,7 @@
 .textInputContainer {
   display: flex;
   flex-direction: column;
+  width: 100%;
 }
 
 .label {
@@ -41,13 +42,16 @@
   flex: 1 0;
   min-width: 50px;
   width: 100%;
-  min-height: 25px;
+  min-height: 35px;
   font-size: inherit;
   background-color: transparent;
   padding-left: 5px;
   border: 0;
   &:focus {
     outline: none;
+  }
+  &:disabled {
+    cursor: not-allowed;
   }
 }
 
@@ -56,6 +60,7 @@
   align-items: center;
   justify-content: center;
   flex: 0 0;
+  width: 24px;
 }
 
 .feedback {
